@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+{% endblock %}
+
+{% block page_title %} - 3D printing for you{% endblock %}
+
+{% block content %}
+  <div class="landing-background">
+    <div class="container py-5">
+      <h2 class="title">3D PRINTING</h2>
+      <p>For you</p>
+    </div>
+  </div>
+{% endblock %}
