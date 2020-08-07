@@ -24,3 +24,10 @@ class TestHomeUrls(TestCase):
         privacy_page = self.client.get("/privacy-policy/")
         self.assertEqual(privacy_page.status_code, 200)
         self.assertTemplateUsed(privacy_page, 'home/privacy_policy.html')
+
+    def test_terms_of_use_url(self):
+        """Test Terms and condition of use url"""
+
+        terms_page = self.client.get("/terms-use/")
+        self.assertEqual(terms_page.status_code, 200)
+        self.assertTemplateUsed(terms_page, 'home/terms_use.html')

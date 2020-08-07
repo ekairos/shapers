@@ -17,3 +17,9 @@ def privacy_policy(request):
     """View returning Shapers Privacy Policy"""
 
     return render(request, 'home/privacy_policy.html')
+
+
+def terms_use(request):
+    """View returning Shapers Terms and Conditions of Use"""
+
+    return render(request, 'home/terms_use.html')
