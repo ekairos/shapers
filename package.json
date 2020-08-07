@@ -1,0 +1,19 @@
+{
+  "name": "shapers",
+  "version": "1.0.0",
+  "scripts": {
+    "sass": "sass --watch --style=compressed static/scss/main.scss:static/css/main.css home/static/home/scss/home.scss:home/static/home/css/home.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exipso/shapers.git"
+  },
+  "author": "exipso",
+  "bugs": {
+    "url": "https://github.com/exipso/shapers/issues"
+  },
+  "homepage": "https://github.com/exipso/shapers#readme",
+  "devDependencies": {
+    "sass": "^1.26.10"
+  }
+}
