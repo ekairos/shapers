@@ -1,0 +1,21 @@
+/*
+        ___ MAIN NAVBAR ___
+*/
+nav#main-navbar {
+  z-index: 999;
+  background-color: $bright-gray;
+}
+
+/*
+        ___ MAIN FOOTER ___
+*/
+#main-footer {
+  padding-top: 40px;
+  padding-bottom: 20px;
+  background-color: $bright-gray;
+}
+
+.copyright {
+  text-align: center;
+  font-size: .8rem;
+}

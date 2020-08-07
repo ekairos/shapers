@@ -1,1 +1,1 @@
-body{font-family:"Lato",sans-serif;font-size:14px}.title{font-family:"Oswald",sans-serif}/*# sourceMappingURL=main.css.map */
+dl,ol,ul{padding-left:10px}li{list-style:none}html,body{font-family:"Lato",sans-serif;font-size:14px;height:100%}.main-wrapper{min-height:calc(100% - 147px);padding-top:49px}.title{font-family:"Oswald",sans-serif}nav#main-navbar{z-index:999;background-color:#f8f8f8}#main-footer{padding-top:40px;padding-bottom:20px;background-color:#f8f8f8}.copyright{text-align:center;font-size:.8rem}/*# sourceMappingURL=main.css.map */
