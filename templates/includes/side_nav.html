@@ -1,0 +1,26 @@
+<div id="side-menu" class="side-nav">
+  <div class="text-right">
+    <span class="slide-out-btn">&times;</span>
+  </div>
+  <ul>
+    <li class="border-bottom"><a href="{% url 'home' %}">Home</a></li>
+    <li class="border-bottom"><a href="#">Store</a></li>
+  </ul>
+</div>
+
+<div id="sidenav-backdrop"></div>
+
+<script>
+  $(document).ready(function () {
+
+    $(".slide-in-btn, .slide-out-btn").click(function () {
+      $("#side-menu").toggleClass('slide-menu-in');
+      $("#sidenav-backdrop").fadeToggle(150);
+    });
+
+    $("#sidenav-backdrop").click(function () {
+        $("#side-menu").toggleClass('slide-menu-in');
+        $("#sidenav-backdrop").fadeToggle(150);
+    });
+  })
+</script>
