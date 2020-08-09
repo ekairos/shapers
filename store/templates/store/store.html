@@ -7,4 +7,29 @@
     <h2>Store</h2>
     <p>Browse our partners products !</p>
   </header>
+  <main class="container mb-3">
+    <div class="row">
+      {% for product in products %}
+        <article class="col-12 col-md-4 d-md-flex">
+          <div class="row">
+            <section class="col-6 col-md-12">
+              <a href="#">
+                <img class="store-card-img" src="{{ product.image.url }}" alt="{{ product.name }}" width="140">
+              </a>
+            </section>
+            <section class="col-6 col-md-12 d-flex flex-column">
+              <h5><a href="#">{{ product.name }}</a></h5>
+              <p>{{ product.description|truncatechars:60 }}</p>
+              <span class="align-self-end align-self-md-start mt-auto pr-3 pb-2">${{ product.base_price }}</span>
+            </section>
+          </div>
+        </article>
+        {% if forloop.revcounter0 > 0 %}
+          <hr class="divider my-3 d-block d-md-none">
+        {% endif %}
+      {% empty %}
+        <p class="col-12">Couldn't find selected products.</p>
+      {% endfor %}
+    </div>
+  </main>
 {% endblock %}
