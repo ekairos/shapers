@@ -22,11 +22,17 @@ html, body {
 /*
         ___ STORE ___
 */
-//      ___ Cards ___
+//      ___ Product Card ___
 .store-card-img {
   width: 100%;
   height: 180px;
   object-fit: cover;
+}
+//      ___ Product Details ___
+.product-img {
+  max-height: 350px;
+  object-fit: contain;
+  width: 100%;
 }
 
 /*
@@ -35,5 +41,9 @@ html, body {
 @media (min-width: 1200px) {
   .store-card-img {
     height: 220px;
+  }
+
+  .product-img {
+    max-height: 450px;
   }
 }

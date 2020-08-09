@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block page_title %} - {{ product.name }}{% endblock %}
+
+{% block content %}
+  <div class="container mt-3">
+    <article class="row">
+
+        <section class="col-12 pb-3 col-md-5 order-md-2">
+          <h3>{{ product.name }}</h3>
+          <p><small>version : {{ product.date_version }}</small></p>
+          <p class="mb-0">${{ product.base_price }}</p>
+          <hr class="divider my-3 d-none d-md-block">
+          <section class="d-none d-md-block">
+            <p>{{ product.description }}</p>
+          </section>
+        </section>
+
+        <hr class="divider d-md-none">
+
+        <section class="col-12 col-md-7 py-3">
+          <img class="product-img" src="{{ product.image.url }}" alt="{{ product.name }}" width="140">
+        </section>
+
+        <hr class="divider d-md-none">
+
+        <section class="col-12 py-3 d-md-none">
+          <p>{{ product.description }}</p>
+        </section>
+
+    </article>
+  </div>
+{% endblock %}
