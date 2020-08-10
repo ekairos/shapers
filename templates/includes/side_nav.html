@@ -4,7 +4,10 @@
   </div>
   <ul>
     <li class="border-bottom"><a href="{% url 'home' %}">Home</a></li>
-    <li class="border-bottom"><a href="{% url 'store' %}">Store</a></li>
+    <li class="border-bottom"><a href="{% url 'store' %}">Everything</a></li>
+    <li class="border-bottom"><a href="{% url 'store' %}?category=marvel">Marvel</a></li>
+    <li class="border-bottom"><a href="{% url 'store' %}?category=games">All Games</a></li>
+    <li class="border-bottom"><a href="{% url 'store' %}?category=home,garden">Home & Garden</a></li>
   </ul>
 </div>
 

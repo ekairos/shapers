@@ -1,0 +1,12 @@
+<div class="search-bar">
+  <form method="GET" action="{% url 'store' %}">
+    <div class="input-group">
+      <input type="text" class="form-control border-0 rounded-0" placeholder="search for ..." name="q">
+      <div class="input-group-append">
+        <button type="submit" class="form-control btn border-0 rounded-0">
+          <img class="icon" src="{{ MEDIA_URL }}icons/search.svg" alt="search" width="18" title="Search">
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
