@@ -5,7 +5,11 @@
 {% block content %}
   <header class="container mt-3">
     <h2>Store</h2>
-    <p>Browse our partners products !</p>
+    {% if query_string and products %}
+      <p>Results for ' <i>{{ query_string }}</i> '</p>
+    {% elif products %}
+      <p>Browse our partners products !</p>
+    {% endif %}
   </header>
   <main class="container mb-3">
     <div class="row">
@@ -28,7 +32,11 @@
           <hr class="divider my-3 d-block d-md-none">
         {% endif %}
       {% empty %}
-        <p class="col-12">Couldn't find selected products.</p>
+        {% if query_string %}
+          <p class="col-12">Couldn't find any product with ' <i>{{ query_string }}</i> '.</p>
+        {% else %}
+          <p class="col-12">Couldn't find any corresponding product.</p>
+        {% endif %}
       {% endfor %}
     </div>
   </main>
