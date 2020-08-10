@@ -9,11 +9,12 @@ def store(request):
     products = Product.objects.all()
 
     query_string = None
+    query_categories = None
 
     if request.GET:
         if 'category' in request.GET:
-            categories = request.GET['category'].split(',')
-            products = products.filter(category__name__in=categories)
+            query_categories = request.GET['category'].split(',')
+            products = products.filter(category__name__in=query_categories)
 
         if 'q' in request.GET:
             query_string = request.GET['q']
@@ -24,6 +25,7 @@ def store(request):
     context = {
         'products': products,
         'query_string': query_string,
+        'query_categories': query_categories,
     }
 
     return render(request, 'store/store.html', context=context)

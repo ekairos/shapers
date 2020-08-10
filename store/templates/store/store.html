@@ -7,8 +7,20 @@
     <h2>Store</h2>
     {% if query_string and products %}
       <p>Results for ' <i>{{ query_string }}</i> '</p>
-    {% elif products %}
-      <p>Browse our partners products !</p>
+    {% elif products and query_categories %}
+      <p>Browse our
+        {% for cat in query_categories %}
+          {% if forloop.revcounter0 > 1 %}
+            <span><strong>{{ cat|capfirst }}</strong>, </span>
+          {% elif forloop.revcounter0 == 1 %}
+            <span><strong>{{ cat|capfirst }}</strong> and </span>
+          {% elif forloop.revcounter0 == 0 %}
+            <span><strong>{{ cat|capfirst }}</strong></span>
+          {% endif %}
+        {% endfor %}
+        products !</p>
+      {% elif products %}
+      <p>Browse through all our partners products !</p>
     {% endif %}
   </header>
   <main class="container mb-3">
