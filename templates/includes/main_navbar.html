@@ -2,8 +2,27 @@
   <div class="container">
     <span class="navbar-toggler-icon slide-in-btn"></span>
     <span class="navbar-brand title pl-3"><a href="{% url 'home' %}">Shapers</a></span>
-    <div class="navbar-nav ml-auto">
-      <a class="nav-item nav-link" href="#">Signin</a>
-    </div>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown">
+        <a id="signinDropDownLink" class="dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+           aria-expanded="false">
+          {% if request.user.is_authenticated %}
+            My Account
+          {% else %}
+            Account
+          {% endif %}
+        </a>
+        <div id="signin-dropdown" class="dropdown-menu rounded-0" aria-labelledby="signinDropDownLink">
+          {% if request.user.is_authenticated %}
+            <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+          {% else %}
+            <a class="dropdown-item" href="{% url 'account_login' %}">Sign In</a>
+            <a class="dropdown-item" href="{% url 'account_signup' %}">Sign Up</a>
+          {% endif %}
+        </div>
+      </li>
+    </ul>
   </div>
 </nav>
