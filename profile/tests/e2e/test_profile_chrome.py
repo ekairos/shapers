@@ -16,7 +16,9 @@ class TestProfileChrome(StaticLiveServerTestCase):
         cls.new_user = {
             'email': 'whatever@gmail.net',
             'password': 'Aaaa2468',
-            'username': 'johnny'
+            'username': 'johnny',
+            'first_name': 'john',
+            'last_name': 'Doe',
         }
 
     @classmethod
@@ -57,6 +59,10 @@ class TestProfileChrome(StaticLiveServerTestCase):
             self.new_user['email'])
         self.selenium.find_element_by_id('id_username').send_keys(
             self.new_user['username'])
+        self.selenium.find_element_by_id('id_first_name').send_keys(
+            self.new_user['first_name'])
+        self.selenium.find_element_by_id('id_last_name').send_keys(
+            self.new_user['last_name'])
         self.selenium.find_element_by_id('id_password1').send_keys(
             self.new_user['password'])
         self.selenium.find_element_by_id('id_password2').send_keys(

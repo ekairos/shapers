@@ -103,6 +103,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
+ACCOUNT_FORMS = {
+    'signup': 'profile.forms.UserSignupForm'
+}
 
 WSGI_APPLICATION = 'shapers.wsgi.application'
 
