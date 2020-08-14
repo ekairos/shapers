@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     'home',
     'store',
     'profile',
-    # others
-    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -82,10 +80,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
             ],
-            'builtins': [
-                'crispy_forms.templatetags.crispy_forms_tags',
-                'crispy_forms.templatetags.crispy_forms_field'
-            ]
         },
     },
 ]
