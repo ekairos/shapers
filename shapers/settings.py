@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'home',
     'store',
     'profile',
+    # others
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +82,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
             ],
+            'builtins': [
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field'
+            ]
         },
     },
 ]
@@ -104,7 +110,8 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_FORMS = {
-    'signup': 'profile.forms.UserSignupForm'
+    'signup': 'profile.forms.UserSignupForm',
+    'login': 'profile.forms.UserLoginForm',
 }
 
 WSGI_APPLICATION = 'shapers.wsgi.application'
