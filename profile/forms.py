@@ -1,5 +1,7 @@
 from django import forms
-from allauth.account.forms import SignupForm, LoginForm
+from allauth.account.forms import (
+    SignupForm, LoginForm, ResetPasswordForm,
+    ResetPasswordKeyForm)
 
 
 class UserSignupForm(SignupForm):
@@ -44,7 +46,7 @@ class UserSignupForm(SignupForm):
 
 
 class UserLoginForm(LoginForm):
-    """Overriding forms field class"""
+    """Overriding Allauth Login form fields classes and placeholders"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -58,6 +60,30 @@ class UserLoginForm(LoginForm):
             if field == 'remember':
                 self.fields[field].widget.attrs['class'] = 'form-check-input'
 
-    def login(self, *args, **kwargs):
 
-        return super(UserLoginForm, self).login(*args, **kwargs)
+class UserPasswordResetForm(ResetPasswordForm):
+    """Overriding forms field classes"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control col-12 ' \
+                                                       'col-md-6 rounded-0'
+
+
+class UserPasswordResetFromKeyForm(ResetPasswordKeyForm):
+    """
+    Overriding Allauth Password reset key form fields classes and placeholders
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control col-12 ' \
+                                                       'col-md-6 rounded-0'
+
+        self.fields['password1'].widget.attrs['placeholder'] = 'New Password *'
+        self.fields['password2'].widget.attrs['placeholder'] = \
+            'New Password Confirmation *'

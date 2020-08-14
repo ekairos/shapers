@@ -89,7 +89,7 @@ class TestProfileChrome(StaticLiveServerTestCase):
         """
 
         self.selenium.find_element_by_link_text('My Account').click()
-        self.selenium.find_element_by_link_text('Logout').click()
+        self.selenium.find_element_by_link_text('Sign Out').click()
         WebDriverWait(self.selenium, 10).until(EC.url_changes)
         self.assertEqual(self.selenium.current_url,
                          f'{self.live_server_url}/accounts/logout/')
@@ -115,3 +115,23 @@ class TestProfileChrome(StaticLiveServerTestCase):
         self._logout()
 
         self._to_signin()
+
+    def test_password_reset(self):
+
+        self.selenium.get(f'{self.live_server_url}/')
+
+        self._to_signup()
+        self._logout()
+
+        self.selenium.get(f'{self.live_server_url}/accounts/login/')
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.selenium.find_element_by_link_text('Forgot Password?').click()
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/accounts/password/reset/')
+        self.selenium.find_element_by_id('id_email')\
+            .send_keys(self.new_user['email'])
+        self.selenium.find_element_by_xpath(
+            '//input[@value="Reset My Password"]').click()
+        self.assertEqual(
+            self.selenium.current_url,
+            f'{self.live_server_url}/accounts/password/reset/done/')

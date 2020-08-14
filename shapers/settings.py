@@ -103,9 +103,12 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 ACCOUNT_FORMS = {
     'signup': 'profile.forms.UserSignupForm',
     'login': 'profile.forms.UserLoginForm',
+    'reset_password': 'profile.forms.UserPasswordResetForm',
+    'reset_password_from_key': 'profile.forms.UserPasswordResetFromKeyForm',
 }
 
 WSGI_APPLICATION = 'shapers.wsgi.application'
