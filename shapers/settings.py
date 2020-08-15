@@ -109,6 +109,7 @@ ACCOUNT_FORMS = {
     'login': 'profile.forms.UserLoginForm',
     'reset_password': 'profile.forms.UserPasswordResetForm',
     'reset_password_from_key': 'profile.forms.UserPasswordResetFromKeyForm',
+    'change_password': 'profile.forms.UserPasswordChangeForm',
 }
 
 WSGI_APPLICATION = 'shapers.wsgi.application'

@@ -1,7 +1,7 @@
 from django import forms
 from allauth.account.forms import (
     SignupForm, LoginForm, ResetPasswordForm,
-    ResetPasswordKeyForm)
+    ResetPasswordKeyForm, ChangePasswordForm)
 
 
 class UserSignupForm(SignupForm):
@@ -87,3 +87,18 @@ class UserPasswordResetFromKeyForm(ResetPasswordKeyForm):
         self.fields['password1'].widget.attrs['placeholder'] = 'New Password *'
         self.fields['password2'].widget.attrs['placeholder'] = \
             'New Password Confirmation *'
+
+
+class UserPasswordChangeForm(ChangePasswordForm):
+    """
+    Overriding Allauth Password change form
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control col-12 ' \
+                                                       'col-md-6 rounded-0'
+            self.fields[field].widget.attrs['placeholder'] =\
+                f'{self.fields[field].widget.attrs["placeholder"]} *'

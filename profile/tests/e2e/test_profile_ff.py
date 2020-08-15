@@ -117,6 +117,11 @@ class TestProfileFirefox(StaticLiveServerTestCase):
         self._to_signin()
 
     def test_password_reset(self):
+        """
+        Testing password reset
+        User should be sent an email (redirected to confirmation page)
+        Url link to setnew password not tested yet
+        """
 
         self.selenium.get(f'{self.live_server_url}/')
 
@@ -135,3 +140,35 @@ class TestProfileFirefox(StaticLiveServerTestCase):
         self.assertEqual(
             self.selenium.current_url,
             f'{self.live_server_url}/accounts/password/reset/done/')
+
+    def test_password_change(self):
+        """
+        Testing a user changing his password
+        Successful change should redirect user to his profile page
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+
+        self._to_signup()
+        self.selenium.find_element_by_link_text('My Account').click()
+        self.selenium.find_element_by_link_text('My Profile').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.selenium.find_element_by_link_text('change password ?').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+
+        # I'm overriding Allauth PasswordChangeView to change success_url
+        # See profile/urls.py
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/profile/password-change/')
+
+        self.selenium.find_element_by_id('id_oldpassword').send_keys(
+            self.new_user['password'])
+        self.selenium.find_element_by_id('id_password1').send_keys(
+            'Newpass456')
+        self.selenium.find_element_by_id('id_password2').send_keys(
+            'Newpass456')
+        self.selenium.find_element_by_xpath(
+            '//button[text()="Change Password"]').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/profile/')
