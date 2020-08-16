@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import UserProfile
 from .forms import UserProfileForm
+from django.contrib.auth.models import User
 
 
 @login_required
@@ -23,3 +24,14 @@ def profile(request):
     }
 
     return render(request, 'profile/profile.html', context=context)
+
+
+@login_required()
+def delete_account(request):
+    """Deletes a user account"""
+
+    user = request.user
+
+    User.objects.get(username=user.username).delete()
+
+    return redirect(reverse('home'))

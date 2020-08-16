@@ -34,7 +34,7 @@ class TestProfileFirefox(StaticLiveServerTestCase):
         cls.selenium.quit()
         super().tearDownClass()
 
-    def _to_signin(self):
+    def _signin(self):
         """Navbar dropdown signin should redirect to sign in page"""
 
         self.selenium.find_element_by_link_text('Account').click()
@@ -50,7 +50,7 @@ class TestProfileFirefox(StaticLiveServerTestCase):
             "//form[@action='/accounts/login/']//button[@type='submit']"
         ).click()
 
-    def _to_signup(self):
+    def _signup(self):
         """
         Navbar dropdown signup should redirect to sign up page.
         Successful registration should redirect to home page
@@ -116,13 +116,13 @@ class TestProfileFirefox(StaticLiveServerTestCase):
 
         self.selenium.get(f'{self.live_server_url}/')
 
-        self._to_signup()
+        self._signup()
 
         self._to_profile()
 
         self._logout()
 
-        self._to_signin()
+        self._signin()
 
     def test_password_reset(self):
         """
@@ -133,7 +133,7 @@ class TestProfileFirefox(StaticLiveServerTestCase):
 
         self.selenium.get(f'{self.live_server_url}/')
 
-        self._to_signup()
+        self._signup()
         self._logout()
 
         self.selenium.get(f'{self.live_server_url}/accounts/login/')
@@ -141,7 +141,7 @@ class TestProfileFirefox(StaticLiveServerTestCase):
         self.selenium.find_element_by_link_text('Forgot Password?').click()
         self.assertEqual(self.selenium.current_url,
                          f'{self.live_server_url}/accounts/password/reset/')
-        self.selenium.find_element_by_id('id_email')\
+        self.selenium.find_element_by_id('id_email') \
             .send_keys(self.new_user['email'])
         self.selenium.find_element_by_xpath(
             '//input[@value="Reset My Password"]').click()
@@ -157,10 +157,9 @@ class TestProfileFirefox(StaticLiveServerTestCase):
 
         self.selenium.get(f'{self.live_server_url}/')
 
-        self._to_signup()
-        self.selenium.find_element_by_link_text('My Account').click()
-        self.selenium.find_element_by_link_text('My Profile').click()
-        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self._signup()
+        self._to_profile()
+
         self.selenium.find_element_by_link_text('change password ?').click()
         WebDriverWait(self.selenium, 10).until(EC.url_changes)
 
@@ -190,13 +189,11 @@ class TestProfileFirefox(StaticLiveServerTestCase):
 
         self.selenium.get(f'{self.live_server_url}/')
 
-        self._to_signup()
-        self.selenium.find_element_by_link_text('My Account').click()
-        self.selenium.find_element_by_link_text('My Profile').click()
-        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self._signup()
+        self._to_profile()
 
         for data in self.user_profile:
-            self.selenium.find_element_by_xpath(f'//input[@name="{data}"]')\
+            self.selenium.find_element_by_xpath(f'//input[@name="{data}"]') \
                 .send_keys(self.user_profile[data])
 
         self.selenium.find_element_by_xpath(
@@ -212,3 +209,34 @@ class TestProfileFirefox(StaticLiveServerTestCase):
                     'value'),
                 self.user_profile[data]
             )
+
+    def test_user_deletes_account(self):
+        """
+        User deleting his account should be logged out and unable to
+        reset a password with old password
+        Error Message should be displayed
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+        self._signup()
+        self._to_profile()
+
+        self.selenium.find_element_by_link_text('Delete').click()
+        self.modal = self.selenium.find_element_by_class_name('modal-dialog')
+        self.selenium.find_element_by_link_text('Delete account').click()
+
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/')
+
+        self.selenium.find_element_by_link_text('Account').click()
+        self.selenium.find_element_by_link_text('Sign In').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.selenium.find_element_by_link_text('Forgot Password?').click()
+        self.selenium.find_element_by_id('id_email') \
+            .send_keys(self.new_user['email'])
+        self.selenium.find_element_by_xpath(
+            '//input[@value="Reset My Password"]').click()
+        self.assertEqual(
+            self.selenium.find_element_by_class_name('form-field-error').text,
+            '* The e-mail address is not assigned to any user account'
+        )

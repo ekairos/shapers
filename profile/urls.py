@@ -8,5 +8,6 @@ urlpatterns = [
          PasswordChangeView.as_view(
              success_url='/profile/',
              template_name='allauth/account/password_change.html'),
-         name='profile_password_change')
+         name='profile_password_change'),
+    path('delete/', views.delete_account, name='delete_account')
 ]
