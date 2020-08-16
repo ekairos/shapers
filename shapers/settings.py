@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import mail_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -94,8 +95,6 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'registration@shapers.com'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
@@ -167,3 +166,17 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Email config
+if 'DEV' in os.environ:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'noreply@shapers.com'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = mail_config.user
+    EMAIL_HOST_PASSWORD = mail_config.password
+    DEFAULT_FROM_EMAIL = mail_config.user
