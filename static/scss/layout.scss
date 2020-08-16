@@ -19,6 +19,19 @@ html, body {
   margin-right: auto;
   width: 80%;
 }
+
+/*
+        ___ MODALS ___
+*/
+.modal-dialog {
+  top: calc(50% - 150px);
+}
+
+.modal .modal-content {
+  border-radius: 0;
+  border: none;
+}
+
 /*
         ___ STORE ___
 */
@@ -28,6 +41,7 @@ html, body {
   height: 180px;
   object-fit: cover;
 }
+
 //      ___ Product Details ___
 .product-img {
   max-height: 350px;
