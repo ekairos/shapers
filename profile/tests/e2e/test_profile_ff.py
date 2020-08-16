@@ -16,7 +16,17 @@ class TestProfileFirefox(StaticLiveServerTestCase):
         cls.new_user = {
             'email': 'whatever@gmail.net',
             'password': 'Aaaa2468',
-            'username': 'johnny'
+            'username': 'johnny',
+            'first_name': 'john',
+            'last_name': 'Doe',
+        }
+        cls.user_profile = {
+            'profile_phone_number': '+123456789',
+            'profile_street_address1': 'Street Address 1',
+            'profile_street_address2': 'Street Address 2',
+            'profile_postcode': 'P123',
+            'profile_town_or_city': 'Town or City',
+            'profile_country': 'Country',
         }
 
     @classmethod
@@ -57,6 +67,10 @@ class TestProfileFirefox(StaticLiveServerTestCase):
             self.new_user['email'])
         self.selenium.find_element_by_id('id_username').send_keys(
             self.new_user['username'])
+        self.selenium.find_element_by_id('id_first_name').send_keys(
+            self.new_user['first_name'])
+        self.selenium.find_element_by_id('id_last_name').send_keys(
+            self.new_user['last_name'])
         self.selenium.find_element_by_id('id_password1').send_keys(
             self.new_user['password'])
         self.selenium.find_element_by_id('id_password2').send_keys(
@@ -83,7 +97,7 @@ class TestProfileFirefox(StaticLiveServerTestCase):
         """
 
         self.selenium.find_element_by_link_text('My Account').click()
-        self.selenium.find_element_by_link_text('Logout').click()
+        self.selenium.find_element_by_link_text('Sign Out').click()
         WebDriverWait(self.selenium, 10).until(EC.url_changes)
         self.assertEqual(self.selenium.current_url,
                          f'{self.live_server_url}/accounts/logout/')
@@ -109,3 +123,92 @@ class TestProfileFirefox(StaticLiveServerTestCase):
         self._logout()
 
         self._to_signin()
+
+    def test_password_reset(self):
+        """
+        Testing password reset
+        User should be sent an email (redirected to confirmation page)
+        Url link to setnew password not tested yet
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+
+        self._to_signup()
+        self._logout()
+
+        self.selenium.get(f'{self.live_server_url}/accounts/login/')
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.selenium.find_element_by_link_text('Forgot Password?').click()
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/accounts/password/reset/')
+        self.selenium.find_element_by_id('id_email')\
+            .send_keys(self.new_user['email'])
+        self.selenium.find_element_by_xpath(
+            '//input[@value="Reset My Password"]').click()
+        self.assertEqual(
+            self.selenium.current_url,
+            f'{self.live_server_url}/accounts/password/reset/done/')
+
+    def test_password_change(self):
+        """
+        Testing a user changing his password
+        Successful change should redirect user to his profile page
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+
+        self._to_signup()
+        self.selenium.find_element_by_link_text('My Account').click()
+        self.selenium.find_element_by_link_text('My Profile').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.selenium.find_element_by_link_text('change password ?').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+
+        # I'm overriding Allauth PasswordChangeView to change success_url
+        # See profile/urls.py
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/profile/password-change/')
+
+        self.selenium.find_element_by_id('id_oldpassword').send_keys(
+            self.new_user['password'])
+        self.selenium.find_element_by_id('id_password1').send_keys(
+            'Newpass456')
+        self.selenium.find_element_by_id('id_password2').send_keys(
+            'Newpass456')
+        self.selenium.find_element_by_xpath(
+            '//button[text()="Change Password"]').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/profile/')
+
+    def test_user_updates_profile(self):
+        """
+        Testing a user updating his profile
+        Successful change should redirect user to his profile page with updated
+        form fields
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+
+        self._to_signup()
+        self.selenium.find_element_by_link_text('My Account').click()
+        self.selenium.find_element_by_link_text('My Profile').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+
+        for data in self.user_profile:
+            self.selenium.find_element_by_xpath(f'//input[@name="{data}"]')\
+                .send_keys(self.user_profile[data])
+
+        self.selenium.find_element_by_xpath(
+            '//button[text()="Update Details"]').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/profile/')
+
+        for data in self.user_profile:
+            self.assertEqual(
+                self.selenium.find_element_by_xpath(
+                    f'//input[@name="{data}"]').get_attribute(
+                    'value'),
+                self.user_profile[data]
+            )
