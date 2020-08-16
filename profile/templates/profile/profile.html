@@ -9,31 +9,16 @@
   <main class="container mb-3">
 
     <section class="py-2">
-      <h2>Account details</h2>
+      <h2>Login Details</h2>
+
       <div class="row">
-        <div class="col-12"><small>First Name :</small></div>
-        <div class="col-12">{{ user_profile.user.first_name }}</div>
-      </div>
-      <div class="row">
-        <div class="col-12"><small>Last Name :</small></div>
-        <div class="col-12">{{ user_profile.user.last_name }}</div>
-      </div>
-      <div class="row">
-        <div class="col-12"><small>Username :</small></div>
-        <div class="col-12">{{ user_profile.user.username }}</div>
-      </div>
-      <div class="row">
-        <div class="col-12"><small>Email :</small></div>
-        <div class="col-12">{{ user_profile.user.email }}</div>
+        <div class="col-2"><small>Login Email :</small></div>
+        <div class="col-10">{{ user_profile.user.email|default:'Not provided' }}</div>
       </div>
 
-      <div class="my-3">
-        <button class="btn btn-dark rounded-0 mx-2">Edit</button>
-      </div>
-
-      <div class="ml-2">
-        <small>Need to
-          <a class="mt-2" href="{% url 'profile_password_change' %}">change password ?</a>
+      <div class="row mt-3">
+        <small class="col-12">Need to
+          <a class="" href="{% url 'profile_password_change' %}">change password ?</a>
         </small>
       </div>
     </section>
@@ -41,39 +26,31 @@
     <hr class="divider">
 
     <section class="py-2">
-      <h2>Address Details</h2>
-      <div class="row">
-        <div class="col-12 col-md-6"><small>Phone number :</small></div>
-        <div class="col-12">{{ user_profile.profile_phone_number|default:'Not provided' }}</div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-6"><small>Stree address :</small></div>
-        <div class="col-12">{{ user_profile.profile_street_address1|default:'Not provided' }}</div>
-      </div>
-      {% if user_profile.profile_street_address2 %}
-        <div class="row">
-          <div class="col-12"><small>Street address complement :</small></div>
-          <div class="col-12">{{ user_profile.profile_street_address2|default:'Not provided' }}</div>
+      <h2>Shipping Details</h2>
+
+      <form method="POST" action="{% url 'profile' %}">
+        {% csrf_token %}
+
+        {% if profile_form.has_error %}
+          {% for error in profile_form.errors %}
+            <p class="form-field-error">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+
+        {% for field in profile_form %}
+          <div class="input-group pt-2">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <p class="form-field-error">{{ field.errors.as_text }}</p>
+          {% endif %}
+        {% endfor %}
+
+        <div class="my-3">
+          <button class="btn btn-dark rounded-0 mx-auto mx-md-0" type="submit">Update Details</button>
         </div>
-      {% endif %}
-      <div class="row">
-        <div class="col-12"><small>Postcode :</small></div>
-        <div class="col-12">{{ user_profile.profile_postcode|default:'Not provided' }}</div>
-      </div>
-      <div class="row">
-        <div class="col-12"><small>Town / City :</small></div>
-        <div class="col-12">{{ user_profile.profile_town_or_citye|default:'Not provided' }}</div>
-      </div>
-      <div class="row">
-        <div class="col-12"><small>Country :</small></div>
-        <div class="col-12">{{ user_profile.profile_country|default:'Not provided' }}</div>
-      </div>
-    </section>
+      </form>
 
-    <hr class="divider">
-
-    <section class="py-2">
-      <h2>Preferences</h2>
     </section>
   </main>
 {% endblock %}

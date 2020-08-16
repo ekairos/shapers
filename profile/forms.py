@@ -2,6 +2,7 @@ from django import forms
 from allauth.account.forms import (
     SignupForm, LoginForm, ResetPasswordForm,
     ResetPasswordKeyForm, ChangePasswordForm)
+from .models import UserProfile
 
 
 class UserSignupForm(SignupForm):
@@ -102,3 +103,34 @@ class UserPasswordChangeForm(ChangePasswordForm):
                                                        'col-md-6 rounded-0'
             self.fields[field].widget.attrs['placeholder'] =\
                 f'{self.fields[field].widget.attrs["placeholder"]} *'
+
+
+class UserProfileForm(forms.ModelForm):
+    """Overriding UserSignupform to update user details"""
+
+    class Meta:
+        model = UserProfile
+        exclude = ('user',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['profile_street_address1'].required = True
+        self.fields['profile_postcode'].required = True
+        self.fields['profile_town_or_city'].required = True
+        self.fields['profile_country'].required = True
+
+        placeholders = {
+            'profile_phone_number': 'Phone Number',
+            'profile_street_address1': 'Street Address 1 *',
+            'profile_street_address2': 'Street Address 2',
+            'profile_postcode': 'Postcode *',
+            'profile_town_or_city': 'Town or City *',
+            'profile_country': 'Country *',
+        }
+
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control col-12 ' \
+                                                       'col-md-6 rounded-0'
+            self.fields[field].widget.attrs['placeholder'] = \
+                placeholders[field]

@@ -2,3 +2,7 @@
 .errorlist {
   color: red;
 }
+
+.form-control::placeholder {
+  font-style: italic;
+}

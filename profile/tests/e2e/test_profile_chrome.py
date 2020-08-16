@@ -20,6 +20,14 @@ class TestProfileChrome(StaticLiveServerTestCase):
             'first_name': 'john',
             'last_name': 'Doe',
         }
+        cls.user_profile = {
+            'profile_phone_number': '+123456789',
+            'profile_street_address1': 'Street Address 1',
+            'profile_street_address2': 'Street Address 2',
+            'profile_postcode': 'P123',
+            'profile_town_or_city': 'Town or City',
+            'profile_country': 'Country',
+        }
 
     @classmethod
     def tearDownClass(cls):
@@ -172,3 +180,35 @@ class TestProfileChrome(StaticLiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(EC.url_changes)
         self.assertEqual(self.selenium.current_url,
                          f'{self.live_server_url}/profile/')
+
+    def test_user_updates_profile(self):
+        """
+        Testing a user updating his profile
+        Successful change should redirect user to his profile page with updated
+        form fields
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+
+        self._to_signup()
+        self.selenium.find_element_by_link_text('My Account').click()
+        self.selenium.find_element_by_link_text('My Profile').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+
+        for data in self.user_profile:
+            self.selenium.find_element_by_xpath(f'//input[@name="{data}"]')\
+                .send_keys(self.user_profile[data])
+
+        self.selenium.find_element_by_xpath(
+            '//button[text()="Update Details"]').click()
+        WebDriverWait(self.selenium, 10).until(EC.url_changes)
+        self.assertEqual(self.selenium.current_url,
+                         f'{self.live_server_url}/profile/')
+
+        for data in self.user_profile:
+            self.assertEqual(
+                self.selenium.find_element_by_xpath(
+                    f'//input[@name="{data}"]').get_attribute(
+                    'value'),
+                self.user_profile[data]
+            )
