@@ -3,3 +3,11 @@
 */
 $bright-gray: #f8f8f8;
 $mid-gray: #d8d8d8;
+
+$success: #1c7430;
+$info: #07307d;
+$warning: #d47712;
+$error: #d41212;
+
+// django messages levels
+$status-classes: ("25": $success, "20": $info, "30": $warning, "40": $error)
