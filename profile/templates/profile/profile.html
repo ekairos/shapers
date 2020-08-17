@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block page_title %} - My Profile{% endblock %}
+
+{% block content %}
+  <header class="container mt-3">
+    <h1 class="title">My Profile</h1>
+  </header>
+  <main class="container mb-3">
+
+    <section class="py-2">
+      <h2>Login Details</h2>
+
+      <div class="row">
+        <div class="col-2"><small>Login Email :</small></div>
+        <div class="col-10">{{ user_profile.user.email|default:'Not provided' }}</div>
+      </div>
+
+      <div class="row mt-3">
+        <small class="col-12">Need to
+          <a class="" href="{% url 'profile_password_change' %}">change password ?</a>
+        </small>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <section class="py-2">
+      <h2>Shipping Details</h2>
+
+      <form method="POST" action="{% url 'profile' %}">
+        {% csrf_token %}
+
+        {% if profile_form.has_error %}
+          {% for error in profile_form.errors %}
+            <p class="form-field-error">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+
+        {% for field in profile_form %}
+          <div class="input-group pt-2">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <p class="form-field-error">{{ field.errors.as_text }}</p>
+          {% endif %}
+        {% endfor %}
+
+        <div class="my-3">
+          <button class="btn btn-dark rounded-0 mx-auto mx-md-0" type="submit">Update Details</button>
+        </div>
+      </form>
+    </section>
+
+    <hr class="divider col-12 my-3">
+
+    <section class="mt-5">
+      <h3>Closing your account</h3>
+      <p>
+        Before deleting your account please be aware that all your personal data will be lost including your
+        orders history.
+      </p>
+      <small>
+        <a class="modal-trigger" href="#del-account" data-toggle="modal" data-target="#del-account">Delete</a>
+        your account ?
+      </small>
+    </section>
+  </main>
+
+  {# Delete Account modal #}
+  <div class="modal fade" id="del-account" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4 class="pb-3 border-bottom">Delete your account ?</h4>
+          <div class="row">
+            <div class="col-12">
+              <p>Please confirm to permanently delete your account.</p>
+            </div>
+            <div class="col-12">
+              <button type="button" class="btn btn-dark rounded-0" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger rounded-0"><a href="{% url 'delete_account' %}">Delete account</a></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

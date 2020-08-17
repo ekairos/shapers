@@ -65,6 +65,13 @@
 {% include 'includes/side_nav.html' %}
 
 <div class="main-wrapper">
+  {% if messages %}
+    <div class="message-container">
+      {% for message in messages %}
+        {% include 'includes/toast-message.html' %}
+      {% endfor %}
+    </div>
+  {% endif %}
   {% block content %}
   {% endblock %}
 </div>
@@ -74,6 +81,9 @@
 {% endblock %}
 
 {% block postload_js %}
+  <script type="text/javascript">
+      $('.toast').toast('show');
+  </script>
 {% endblock %}
 
 </body>

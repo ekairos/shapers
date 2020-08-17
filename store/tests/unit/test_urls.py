@@ -7,7 +7,7 @@
     Details of image file testing in 'test_models.py'
 """
 from django.test import TestCase
-from store.models import Product, new_image_path
+from store.models import Product, new_image_path, Category
 from django.conf import settings
 from django.core.files.images import ImageFile
 import shutil
@@ -51,3 +51,19 @@ class TestStoreUrls(TestCase):
         product_page = self.client.get(f'/store/{self.product.id}/')
         self.assertEqual(product_page.status_code, 200)
         self.assertTemplateUsed(product_page, 'store/product_details.html')
+
+    def test_store_search_toolbar(self):
+        """Test Store's search toolbar returns results to store template"""
+
+        product_page = self.client.get('/store/', {'q': self.product.name})
+        self.assertEqual(product_page.status_code, 200)
+        self.assertTemplateUsed(product_page, 'store/store.html')
+
+    def test_store_browse_category(self):
+        """Test Store's category browsing returns results to store templates"""
+
+        category = Category.objects.create(name='category test name')
+
+        category_page = self.client.get('/store/', {'category': category.name})
+        self.assertEqual(category_page.status_code, 200)
+        self.assertTemplateUsed(category_page, 'store/store.html')
