@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from store.models import Product
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, reverse
 from django.contrib import messages
 
 
@@ -29,3 +29,17 @@ def add_to_cart(request, product_id):
     request.session['cart'] = cart
 
     return redirect(redirect_to)
+
+
+def remove_from_cart(request, product_id):
+    """View removing a Product from the cart"""
+
+    cart = request.session.get('cart', {})
+    product = get_object_or_404(Product, pk=product_id)
+
+    cart.pop(product_id)
+    request.session['cart'] = cart
+
+    messages.success(request, f"Removed {product} from your cart")
+
+    return redirect(reverse('get_cart'))
