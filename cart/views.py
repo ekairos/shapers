@@ -43,3 +43,23 @@ def remove_from_cart(request, product_id):
     messages.success(request, f"Removed {product} from your cart")
 
     return redirect(reverse('get_cart'))
+
+
+def update_cart(request, product_id):
+    """View updating the quantity of a quantity in the cart"""
+
+    product = get_object_or_404(Product, pk=product_id)
+    quantity = int(request.POST.get('quantity'))
+    cart = request.session.get('cart')
+
+    if quantity > 0:
+        cart[product_id] = quantity
+        messages.success(request, f"You have now {quantity} of {product} "
+                                  f"in your cart")
+    else:
+        cart.pop(product_id)
+        messages.success(request, f"Removed {product} from your cart")
+
+    request.session['cart'] = cart
+
+    return redirect(reverse('get_cart'))
