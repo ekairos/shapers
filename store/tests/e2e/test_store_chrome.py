@@ -1,6 +1,10 @@
 """
 A product is required to be created with an image,
 More details in store's 'test_models.py'
+
+Ideally fixtures should be added to run tests with reasonable number of
+real products so to better test the interaction, layout and elements on page
+I'll take care of that later
 """
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
@@ -11,6 +15,8 @@ from store.models import Product, new_image_path
 from django.core.files.images import ImageFile
 from django.conf import settings
 import shutil
+
+from selenium.common.exceptions import NoSuchElementException
 
 
 class TestStoreChrome(StaticLiveServerTestCase):
@@ -152,3 +158,81 @@ class TestStoreChrome(StaticLiveServerTestCase):
             full_text = ', '.join([product_title.text,
                                    product_description.text])
             self.assertIn(keyword, full_text)
+
+    def test_sort_results_by_price(self):
+        """
+        Results should be sorted by highest price then lowest first
+        Sort bar should be updated
+        """
+
+        self.selenium.get(f'{self.live_server_url}/store/')
+        self.selenium.find_element_by_id('sort-selector').click()
+        self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@value="price_asc"]'
+        ).click()
+        WebDriverWait(self.selenium, 10).until(ec.url_changes)
+        self.assertEqual(
+            self.selenium.current_url,
+            f'{self.live_server_url}/store/?sort=price&direction=asc')
+        bar = self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@selected]')
+        self.assertEqual(bar.text.strip(), 'Lowest price')
+
+        self.selenium.find_element_by_id('sort-selector').click()
+        self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@value="price_desc"]'
+        ).click()
+        WebDriverWait(self.selenium, 10).until(ec.url_changes)
+        self.assertEqual(
+            self.selenium.current_url,
+            f'{self.live_server_url}/store/?sort=price&direction=desc')
+        bar = self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@selected]')
+        self.assertEqual(bar.text.strip(), 'Highest price')
+
+    def test_sort_results_by_date(self):
+        """
+        Results should be sorted by latest products then oldest
+        Sort bar should be updated
+        """
+
+        self.selenium.get(f'{self.live_server_url}/store/')
+        self.selenium.find_element_by_id('sort-selector').click()
+        self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@value="date_desc"]'
+        ).click()
+        WebDriverWait(self.selenium, 10).until(ec.url_changes)
+        self.assertEqual(
+            self.selenium.current_url,
+            f'{self.live_server_url}/store/?sort=date&direction=desc')
+        bar = self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@selected]')
+        self.assertEqual(bar.text.strip(), 'Latest')
+
+        self.selenium.find_element_by_id('sort-selector').click()
+        self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@value="date_asc"]'
+        ).click()
+        WebDriverWait(self.selenium, 10).until(ec.url_changes)
+        self.assertEqual(
+            self.selenium.current_url,
+            f'{self.live_server_url}/store/?sort=date&direction=asc')
+        bar = self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@selected]')
+        self.assertEqual(bar.text.strip(), 'Oldest')
+
+    def test_reset_sort_param(self):
+        """
+        Should set back the Product sorting to its Model's default
+        (latest then name). Requires fixtures to test this further
+        """
+
+        self.selenium.get(f'{self.live_server_url}/store/')
+        self.selenium.find_element_by_id('sort-selector').click()
+        self.selenium.find_element_by_xpath(
+            '//select[@id="sort-selector"]//option[@value="reset"]'
+        ).click()
+        WebDriverWait(self.selenium, 10).until(ec.url_changes)
+        self.assertEqual(
+            self.selenium.current_url,
+            f'{self.live_server_url}/store/')

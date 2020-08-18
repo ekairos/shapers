@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block page_title %} - Store{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'store/css/store.css' %}">
+{% endblock %}
+
 {% block content %}
   <header class="container mt-3">
-    <h2>Store</h2>
 
-      {% if products %}
+    {% include 'store/includes/sort_bar.html' %}
+
+    {% if products %}
       <p>{{ products|length }} Product{% if products|length > 1 %}s{% endif %} found
 
         {% if query_string %} for ' <i>{{ query_string }}</i> '{% endif %}
@@ -24,7 +30,7 @@
         {% endif %}
 
       </p>
-      {% endif %}
+    {% endif %}
 
   </header>
   <main class="container mb-3">
@@ -57,3 +63,9 @@
     </div>
   </main>
 {% endblock %}
+
+{% block postload_js %}
+  {{ block.super }}
+  <script type="application/javascript" src="{% static 'store/js/store.js' %}"></script>
+{% endblock %}
+

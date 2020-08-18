@@ -1,0 +1,21 @@
+<div class="row my-2">
+  <div class="col-12">
+      <select id="sort-selector" class="custom-select rounded-0">
+        <option value="reset" {% if query_sorting == 'None_None' %}selected{% endif %}>
+          Sort by...</option>
+        <option value="price_asc" {% if query_sorting == 'price_asc' %}selected{% endif %}>
+          Lowest price
+        </option>
+        <option value="price_desc" {% if query_sorting == 'price_desc' %}selected{% endif %}>
+          Highest price
+        <option value="name_asc" {% if query_sorting == 'name_asc' %}selected{% endif %}>
+          Name (A-Z)</option>
+        <option value="name_desc" {% if query_sorting == 'name_desc' %}selected{% endif %}>
+          Name (Z-A)</option>
+        <option value="date_desc" {% if query_sorting == 'date_desc' %}selected{% endif %}>
+          Latest</option>
+        <option value="date_asc" {% if query_sorting == 'date_asc' %}selected{% endif %}>
+          Oldest</option>
+      </select>
+  </div>
+</div>
