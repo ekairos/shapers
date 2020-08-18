@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block page_title %} - {{ product.name }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'store/css/store.css' %}">
+{% endblock %}
 
 {% block content %}
   <div class="container mt-3">
