@@ -2,7 +2,7 @@
   "name": "shapers",
   "version": "1.0.0",
   "scripts": {
-    "sass": "sass --watch --style=compressed static/scss/main.scss:static/css/main.css home/static/home/scss/home.scss:home/static/home/css/home.css"
+    "sass": "sass --watch --style=compressed static/scss/main.scss:static/css/main.css home/static/home/scss/home.scss:home/static/home/css/home.css store/static/store/scss/store.scss:store/static/store/css/store.css"
   },
   "repository": {
     "type": "git",
