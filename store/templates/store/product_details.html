@@ -6,27 +6,41 @@
   <div class="container mt-3">
     <article class="row">
 
-        <section class="col-12 pb-3 col-md-5 order-md-2">
-          <h3>{{ product.name }}</h3>
-          <p><small>version : {{ product.date_version }}</small></p>
-          <p class="mb-0">${{ product.base_price }}</p>
-          <hr class="divider my-3 d-none d-md-block">
-          <section class="d-none d-md-block">
-            <p>{{ product.description }}</p>
-          </section>
-        </section>
+      <section class="col-12 pb-3 col-md-5 order-md-2">
+        <h3>{{ product.name }}</h3>
+        <p><small>version : {{ product.date_version }}</small></p>
+        <p class="mb-0">${{ product.base_price }}</p>
 
-        <hr class="divider d-md-none">
-
-        <section class="col-12 col-md-7 py-3">
-          <img class="product-img" src="{{ product.image.url }}" alt="{{ product.name }}" width="140">
-        </section>
-
-        <hr class="divider d-md-none">
-
-        <section class="col-12 py-3 d-md-none">
+        <div class="row my-3">
+          <form method="POST" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <div class="input-group">
+                <input class="form-control" type="number" name="quantity" value="1" min="1" max="99"
+                       data-item_id="{{ product.id }}" id="prdt-{{ product.id }}-qty">
+              </div>
+            </div>
+            <input type="hidden" name="redirect_url" value="{{ request.path }}">
+            <button type="submit" class="btn btn-dark btn-small rounded-0">Add to cart</button>
+          </form>
+        </div>
+        <hr class="divider my-3 d-none d-md-block">
+        <section class="d-none d-md-block">
           <p>{{ product.description }}</p>
         </section>
+      </section>
+
+      <hr class="divider d-md-none">
+
+      <section class="col-12 col-md-7 py-3">
+        <img class="product-img" src="{{ product.image.url }}" alt="{{ product.name }}" width="140">
+      </section>
+
+      <hr class="divider d-md-none">
+
+      <section class="col-12 py-3 d-md-none">
+        <p>{{ product.description }}</p>
+      </section>
 
     </article>
   </div>

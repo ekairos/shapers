@@ -5,10 +5,25 @@
 {% block content %}
 
   <header class="container mt-3">
-    <h1>Cart !</h1>
+    <h1>Your cart</h1>
   </header>
 
   <main class="container mb-3">
-    <p>List of products in cart</p>
+    {% if cart_products %}
+      <ul>
+        {% for product in cart_products %}
+          <li>{{ product.quantity }} x {{ product.product.name|capfirst }}</li>
+        {% endfor %}
+      </ul>
+      <p>Total: {{ cart_total }} </p>
+      <button class="btn btn-small btn-dark rounded-0">
+        <a class="text-white" href="{% url 'store' %}">Keep Shopping</a>
+      </button>
+    {% else %}
+      <p>You don't have any products in your cart yet.</p>
+      <button class="btn btn-small btn-dark rounded-0">
+        <a class="text-white" href="{% url 'store' %}">Browse the store</a>
+      </button>
+    {% endif %}
   </main>
 {% endblock %}
