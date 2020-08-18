@@ -11,12 +11,10 @@ from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from store.models import Product, new_image_path
+from store.models import Product, new_image_path, Category
 from django.core.files.images import ImageFile
 from django.conf import settings
 import shutil
-
-from selenium.common.exceptions import NoSuchElementException
 
 
 class TestStoreChrome(StaticLiveServerTestCase):
@@ -38,6 +36,7 @@ class TestStoreChrome(StaticLiveServerTestCase):
         each tests
         """
 
+        self.django_cat = Category.objects.create(name='django')
         self.product_data = {
             'name': 'test product name',
             'description': 'test product description',
@@ -50,6 +49,7 @@ class TestStoreChrome(StaticLiveServerTestCase):
             self.product = Product(**self.product_data)
             self.product.image.save(
                 new_image_path(self.product, image.name), image)
+            self.product.category = self.django_cat
             self.product.save()
 
     def tearDown(self):
@@ -236,3 +236,69 @@ class TestStoreChrome(StaticLiveServerTestCase):
         self.assertEqual(
             self.selenium.current_url,
             f'{self.live_server_url}/store/')
+
+    def test_search_query_results_feedback(self):
+        """
+        Search result string (top of results) should contain categories and
+        keywords the user has selected
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+        self.selenium.find_element_by_xpath(
+            "//div[@class='search-bar']//input[@name='q']") \
+            .send_keys('product name')
+        self.selenium.find_element_by_xpath(
+            "//div[@class='search-bar']//button[@type='submit']") \
+            .click()
+
+        search_string = self.selenium.find_element_by_css_selector(
+            '.main-wrapper header p')
+        self.assertEqual(search_string.text,
+                         "1 Product found for ' product name '")
+
+        self.selenium.find_element_by_id(
+            "categories-selector").click()
+        self.selenium.find_element_by_css_selector(
+            "#categories-selection li").click()
+        self.selenium.find_element_by_xpath(
+            "//div[@class='search-bar']//button[@type='submit']") \
+            .click()
+        search_string = self.selenium.find_element_by_css_selector(
+            '.main-wrapper header p')
+
+        # First letter of category capitalized by template filter
+        self.assertEqual(search_string.text,
+                         "1 Product found for ' product name ' in Django")
+
+    def test_search_bar_category(self):
+        """
+        Available categories should be in search bar dropdown to filter search
+        results. Categories should remain selected on search results.
+        """
+
+        self.selenium.get(f'{self.live_server_url}/')
+        self.selenium.find_element_by_id("categories-selector").click()
+
+        categories_selection = self.selenium.find_elements_by_css_selector(
+            "#categories-selection li")
+        categories = Category.objects.all()
+        self.assertEqual(len(categories), len(categories_selection))
+
+        category = self.selenium.find_element_by_css_selector(
+            "#categories-selection li")
+
+        category.click()
+        self.selenium.find_element_by_id("categories-selector").click()
+        self.assertEqual(category.get_attribute('class'),
+                         'dropdown-item active-selection')
+
+        self.selenium.find_element_by_xpath(
+            "//div[@class='search-bar']//button[@type='submit']") \
+            .click()
+        WebDriverWait(self.selenium, 10).until(ec.url_changes)
+
+        self.selenium.find_element_by_id("categories-selector").click()
+        category = self.selenium.find_element_by_css_selector(
+            "#categories-selection li")
+        self.assertEqual(category.get_attribute('class'),
+                         'dropdown-item active-selection')

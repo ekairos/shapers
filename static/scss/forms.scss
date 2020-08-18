@@ -6,3 +6,7 @@
 .form-control::placeholder {
   font-style: italic;
 }
+
+.dropdown-item.active-selection {
+  background-color: $mid-gray;
+}
