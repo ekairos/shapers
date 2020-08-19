@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'home',
     'store',
     'profile',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +81,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'store.context.in_store'
+                'store.context.in_store',
+                'cart.context.cart_content',
             ],
         },
     },

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load cart_tools %}
+
+{% block page_title %} - Your cart{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'cart/css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <header class="container mt-3">
+    <h1 class="cart-title">Your cart</h1>
+  </header>
+
+  <main class="container mb-3">
+    {% if cart_products %}
+      <div class="row">
+
+        {% for product in cart_products %}
+
+          <article class="py-2 col-12">
+            <div class="row">
+              <section class="col-6 col-md-4 offset-md-2">
+                <a href="{% url 'product_details' product.product.id %}">
+                  <img class="cart-img" src="{{ product.product.image.url }}" alt="{{ product.product.name }}"
+                       width="140">
+                </a>
+              </section>
+
+              <section class="col-6 col-md-4 d-flex flex-column justify-content-between">
+                <h5><a
+                    href="{% url 'product_details' product.product.id %}">{{ product.product.name|capfirst|truncatechars:20 }}</a>
+                </h5>
+                {#              <p>{{ product.product.description|truncatechars:60 }}</p>#}
+                {#              <span class="align-self-end align-self-md-start mt-auto pr-3 pb-2">${{ product.product.base_price }}</span>#}
+
+                <form class="cart-product-form" method="POST" action="{% url 'update_cart' product.product.id %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <div class="input-group border border-light">
+
+                      <a class="btn btn-sm btn-dark rounded-0 border-0 input-group-text decrement-qty-btn"
+                         data-item_id="{{ item.item_id }}" id="decrement-{{ item.item_id }}"
+                         href="{% url 'decrement_cart_product' product.product.id %}">
+                        <span>
+                            <i class="fas fa-minus fa-sm"></i>
+                        </span>
+                      </a>
+
+                      <input type="number" class="form-control rounded-0  border-0" name="quantity" min="1" max="99"
+                             id="{{ product.product.id }}-cart-qty" value="{{ product.quantity }}"
+                             href="{% url 'increment_cart_product' product.product.id %}">
+
+                      <a class="btn btn-sm btn-dark rounded-0 border-0 input-group-text increment-qty-btn"
+                         data-item_id="{{ item.item_id }}" id="increment-{{ item.item_id }}"
+                         href="{% url 'increment_cart_product' product.product.id %}">
+                        <span>
+                            <i class="fas fa-plus fa-sm"></i>
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+                  <button class="btn btn-dark btn-sm rounded-0 text-white"
+                          href="{% url 'update_cart' product.product.id %}">Update
+                  </button>
+                  <a class="btn btn-danger btn-sm rounded-0 text-white"
+                     href="{% url 'remove_from_cart' product.product.id %}">Remove</a>
+                </form>
+
+                <div class="d-inline-flex justify-content-between">
+                  <span>price :</span>
+                  <span>{{ product.product.base_price | multiply:product.quantity }} €</span>
+                </div>
+
+              </section>
+            </div>
+          </article>
+
+          {% if forloop.revcounter0 > 0 %}
+            <hr class="divider">{% endif %}
+
+        {% endfor %}
+      </div>
+
+      {% comment %}wrap divider in row to keep consistent width accross all sections{% endcomment %}
+      <div class="row">
+        <hr class="divider">
+      </div>
+
+      <div class="row">
+        <p class="col-md-8 offset-md-2 d-flex justify-content-between">
+          <span>{{ cart_count }} Product{{ num_messages|pluralize }} :</span>
+          <span>Subtotal: {{ cart_total }} €</span>
+        </p>
+      </div>
+
+      <div class="row">
+        <hr class="divider">
+      </div>
+
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <button class="btn btn-dark rounded-0">
+            <a class="text-white" href="{% url 'store' %}">Keep Shopping</a>
+          </button>
+          <button class="btn btn-dark rounded-0">
+            <a class="text-white" href="#">To Checkout</a>
+          </button>
+        </div>
+      </div>
+
+    {% else %}
+      <div class="row">
+        <div class="col-md-9 offset-md-1">
+          <p>You don't have any products in your cart yet.</p>
+          <button class="btn btn-dark rounded-0">
+            <a class="text-white" href="{% url 'store' %}">Browse the store</a>
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  </main>
+{% endblock %}
