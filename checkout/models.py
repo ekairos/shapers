@@ -2,6 +2,7 @@ from django.db import models
 from uuid import uuid4
 from profile.models import UserProfile
 from store.models import Product
+from django.db.models import Sum
 
 
 class Order(models.Model):
@@ -26,6 +27,19 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.order_number)
+
+    def update_total(self):
+        """
+        Update the order_total with the sum of lineproducts when a lineproduct
+        is saved
+        """
+
+        self.order_total = self.lineproducts.aggregate(
+            Sum('lineproduct_total'))['lineproduct_total__sum'] or 0
+        self.save()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
 
 class OrderLineProduct(models.Model):
