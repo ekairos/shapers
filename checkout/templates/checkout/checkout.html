@@ -3,5 +3,39 @@
 {% block page_title %} - Checkout{% endblock %}
 
 {% block content %}
-  <h1>Checkout</h1>
+  <header class="container mt-3">
+    <h1 class="title">Checkout</h1>
+  </header>
+
+  <main class="container mb-3">
+
+    <section class="py-2">
+      <h2>Shipping Details</h2>
+
+      <form method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+
+        {% if order_form.has_error %}
+          {% for error in order_form.errors %}
+            <p class="form-field-error">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+
+        {% for field in order_form %}
+          <div class="input-group pt-2">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <p class="form-field-error">{{ field.errors.as_text }}</p>
+          {% endif %}
+        {% endfor %}
+
+        <div class="my-3">
+          <button class="btn btn-dark rounded-0 mx-auto mx-md-0" type="submit">Pay !</button>
+        </div>
+      </form>
+
+    </section>
+  </main>
+
 {% endblock %}
