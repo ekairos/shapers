@@ -5,11 +5,13 @@ from profile.models import UserProfile
 from django.contrib.auth.decorators import login_required
 from store.models import Product
 from .models import OrderLineProduct
+from django.conf import settings
 
 
 @login_required
 def checkout(request):
     """View returning checkout page and processing payment logic"""
+    stripe_public_key = settings.STRIPE_PUBLIC_KEY
 
     if request.user.is_anonymous:
         messages.error(request, 'You need to be logged in to proceed.')
@@ -60,7 +62,8 @@ def checkout(request):
 
     context = {
         'order_form': order_form,
-        'cart_content': cart_content
+        'cart_content': cart_content,
+        'spk': stripe_public_key,
     }
 
     return render(request, 'checkout/checkout.html', context=context)
