@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 import mail_config
-from private_keys import stripe_secret_key, stripe_public_key
+from private_keys import (
+    stripe_secret_key, stripe_public_key, stripe_wh_secret_key)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -191,4 +192,6 @@ else:
 # Stripe Payment
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', stripe_public_key)
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', stripe_secret_key)
+STRIPE_WEBHOOK_SECRET_KEY = os.environ.get('STRIPE_WEBHOOK_SECRET_KEY',
+                                           stripe_wh_secret_key)
 STRIPE_CURRENCY = 'eur'
