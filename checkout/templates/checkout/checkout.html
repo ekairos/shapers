@@ -17,7 +17,7 @@
     <section class="py-2">
       <h2>Shipping & Billing Details</h2>
 
-      <form method="POST" action="{% url 'checkout' %}">
+      <form id="payment-form" method="POST" action="{% url 'checkout' %}">
         {% csrf_token %}
 
         {# Shipping Address #}
@@ -46,6 +46,8 @@
           <div id="card-element" class="col-12 col-md-6 mt-2"></div>
 
           <div class="form-field-error" id="card-errors" role="alert"></div>
+
+          <input type="hidden" value="{{ scsk }}" name="scsk">
         </fieldset>
 
         <div class="my-3">
@@ -60,5 +62,6 @@
 {% block postload_js %}
   {{ block.super }}
   {{ spk|json_script:"spk" }}
+  {{ scsk|json_script:"scsk" }}
   <script src="{% static 'checkout/js/checkout.js' %}"></script>
 {% endblock %}

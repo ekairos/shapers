@@ -188,5 +188,7 @@ else:
     EMAIL_HOST_PASSWORD = mail_config.password
     DEFAULT_FROM_EMAIL = mail_config.user
 
+# Stripe Payment
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', stripe_public_key)
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', stripe_secret_key)
+STRIPE_CURRENCY = 'eur'
