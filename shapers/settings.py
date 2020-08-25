@@ -187,7 +187,7 @@ else:
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_HOST_USER = mail_config.user
     EMAIL_HOST_PASSWORD = mail_config.password
-    DEFAULT_FROM_EMAIL = mail_config.user
+    DEFAULT_FROM_EMAIL = mail_config.mail_from
 
 # Stripe Payment
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', stripe_public_key)
