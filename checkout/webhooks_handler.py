@@ -128,6 +128,8 @@ class StripeWhHandler:
                     status=200)
 
             except Exception as e:
+                if order_process:
+                    order_process.delete()
 
                 return HttpResponse(
                     content=f'Error saving the order with WH handler: '
