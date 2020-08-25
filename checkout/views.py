@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import (render, redirect, reverse, get_object_or_404,
+                              HttpResponse)
 from django.contrib import messages
 from .forms import OrderForm
 from .models import Order
@@ -9,6 +10,31 @@ from .models import OrderLineProduct
 from django.conf import settings
 import stripe
 from cart.context import cart_content as cc
+import json
+from django.views.decorators.http import require_POST
+
+
+@require_POST
+def add_checkout_metadata(request):
+    """
+    Add Metadata into Stripe Payment Intent for Webhook process
+
+    :return: Payment Intent with cart_content, user & checkout time
+    """
+
+    try:
+        pid = request.POST.get('stripeClientSKey').split('_secret')[0]
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        stripe.PaymentIntent.modify(pid, metadata={
+            'cart_content': json.dumps(request.session.get('cart', {})),
+            'username': request.user.username,
+        })
+        return HttpResponse(status=200)
+    except Exception as e:
+        messages.error(request, "Sorry we couldn't process your payment. "
+                                "Please try again later or contact us")
+        return HttpResponse(content=e, status=400)
 
 
 @login_required
@@ -42,18 +68,19 @@ def checkout(request):
                     OrderLineProduct.objects.create(
                         order=order_process,
                         product=product,
-                        quantity=quantity,
+                        quantity=quantity
                     )
+
                 except Product.DoesNotExist:
-                    messages.error(request, (
+                    messages.error(
+                        request,
                         "We couldn't process your order. You have not "
                         "been charged. Please try again or contact us.")
-                                   )
                     order_process.delete()
                     return redirect(reverse('get_cart'))
 
             messages.success(request,
-                             "Your're order has been placed successfully. "
+                             "Your order has been placed successfully. "
                              "You will receive an email shortly.")
 
             return redirect('checkout_success',
@@ -72,13 +99,18 @@ def checkout(request):
             'town_or_city': user_profile.profile_town_or_city,
             'country': user_profile.profile_country,
         })
+
         current_cart = cc(request)
         total_charge = round(current_cart['cart_total'] * 100)
 
         stripe.api_key = stripe_secret_key
         intent = stripe.PaymentIntent.create(
             amount=total_charge,
-            currency=settings.STRIPE_CURRENCY
+            currency=settings.STRIPE_CURRENCY,
+            metadata={
+                'cart_content': json.dumps(cart_content),
+                'username': request.user.username,
+            }
         )
 
         context = {

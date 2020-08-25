@@ -8,4 +8,6 @@ urlpatterns = [
     path('success/<order_number>', views.checkout_success,
          name='checkout_success'),
     path('webhooks/', stripe_webhook, name='stripe_webhook'),
+    path('add_checkout_metadata/', views.add_checkout_metadata,
+         name='add_checkout_metadata')
 ]
