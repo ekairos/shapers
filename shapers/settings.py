@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import mail_config
+from private_keys import (
+    stripe_secret_key, stripe_public_key, stripe_wh_secret_key)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -49,6 +52,8 @@ INSTALLED_APPS = [
     'home',
     'store',
     'profile',
+    'cart',
+    'checkout',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +84,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'store.context.in_store',
+                'cart.context.cart_content',
             ],
         },
     },
@@ -94,8 +101,6 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'registration@shapers.com'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
@@ -169,3 +174,24 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Email config
+if 'DEV' in os.environ:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'noreply@shapers.com'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = mail_config.user
+    EMAIL_HOST_PASSWORD = mail_config.password
+    DEFAULT_FROM_EMAIL = mail_config.mail_from
+
+# Stripe Payment
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', stripe_public_key)
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', stripe_secret_key)
+STRIPE_WEBHOOK_SECRET_KEY = os.environ.get('STRIPE_WEBHOOK_SECRET_KEY',
+                                           stripe_wh_secret_key)
+STRIPE_CURRENCY = 'eur'
