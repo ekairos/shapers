@@ -36,7 +36,7 @@
                 {#              <p>{{ product.product.description|truncatechars:60 }}</p>#}
                 {#              <span class="align-self-end align-self-md-start mt-auto pr-3 pb-2">${{ product.product.base_price }}</span>#}
 
-                <form class="cart-product-form" method="POST" action="{% url 'update_cart' product.product.id %}">
+                <form class="product-form" method="POST" action="{% url 'update_cart' product.product.id %}">
                   {% csrf_token %}
                   <div class="form-group">
                     <div class="input-group border border-light">
