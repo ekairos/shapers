@@ -116,11 +116,11 @@
 
     {% else %}
       <div class="row">
-        <div class="col-md-9 offset-md-1">
+        <div class="col-md-8 offset-md-2">
           <p>You don't have any products in your cart yet.</p>
-          <button class="btn btn-dark rounded-0">
-            <a class="text-white" href="{% url 'store' %}">Browse the store</a>
-          </button>
+          <a class="btn btn-dark rounded-0" href="{% url 'store' %}">
+            <span>Browse the store</span>
+          </a>
         </div>
       </div>
     {% endif %}
