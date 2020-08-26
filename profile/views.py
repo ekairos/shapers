@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import UserProfile
 from .forms import UserProfileForm
 from django.contrib.auth.models import User
+from checkout.models import Order
 
 
 @login_required
@@ -35,3 +36,28 @@ def delete_account(request):
     User.objects.get(username=user.username).delete()
 
     return redirect(reverse('home'))
+
+
+@login_required()
+def my_orders(request):
+    """View returning the current users order history"""
+
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    user_orders = user_profile.orders.all()
+
+    context = {
+        'user_orders': user_orders
+    }
+
+    return render(request, 'profile/my_orders.html', context=context)
+
+
+@login_required()
+def order_details(request, order_id):
+    """View return details of a specific order"""
+
+    context = {
+        'order': get_object_or_404(Order, pk=order_id),
+    }
+
+    return render(request, 'profile/order_details.html', context=context)

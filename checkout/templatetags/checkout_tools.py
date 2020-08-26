@@ -5,5 +5,5 @@ register = template.Library()
 
 
 @register.filter(name='multiply')
-def multipy(a, b):
+def multiply(a, b):
     return a * b
