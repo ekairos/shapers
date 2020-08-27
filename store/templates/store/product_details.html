@@ -12,8 +12,8 @@
     <article class="row">
 
       <section class="col-12 py-3 col-md-5 order-md-2">
-        <h3>{{ product.name }}</h3>
-        <p><small>version : {{ product.date_version }}</small></p>
+        <h3>{{ product.name|capfirst }}</h3>
+        <p><small class="text-muted">version : {{ product.date_version }}</small></p>
         <p class="mb-0">${{ product.base_price }}</p>
 
         <div class="my-3">
@@ -38,12 +38,12 @@
               </div>
             </div>
             <input type="hidden" name="redirect_url" value="{{ request.path }}">
-            <button type="submit" class="btn btn-dark btn-small rounded-0">Add to cart</button>
+            <button type="submit" class="btn btn-dark btn-small rounded-0 text-capitalize">Add to cart</button>
           </form>
         </div>
         <hr class="divider my-3 d-none d-md-block">
         <section class="d-none d-md-block">
-          <p>{{ product.description }}</p>
+          <p>{{ product.description|capfirst }}</p>
         </section>
       </section>
 
@@ -56,7 +56,7 @@
       <hr class="divider d-md-none">
 
       <section class="col-12 py-3 d-md-none">
-        <p>{{ product.description }}</p>
+        <p>{{ product.description|capfirst }}</p>
       </section>
 
     </article>
