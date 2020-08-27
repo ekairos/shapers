@@ -4,6 +4,7 @@ from .models import UserProfile
 from .forms import UserProfileForm
 from django.contrib.auth.models import User
 from checkout.models import Order
+from django.contrib import messages
 
 
 @login_required
@@ -16,6 +17,7 @@ def profile(request):
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Your details have been updated!')
 
     profile_form = UserProfileForm(instance=user_profile)
 
