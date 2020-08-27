@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load profile_tools %}
 
 {% block page_title %} - My Orders{% endblock %}
 
@@ -29,7 +30,10 @@
               </div>
             </header>
 
-            <small class="text-muted">Product{{ order.lineproducts.count|pluralize }}</small>
+            <small class="text-muted">
+              <span>{{ order.lineproducts.count }} Product{{ order.lineproducts.count|pluralize }}</span>
+              <span> | {{ order.lineproducts.all|printqty }} Print{{ order.lineproducts.all|printqty|pluralize }}</span>
+            </small>
             <div class="d-flex my-2 my-md-3">
 
               {% for lineproduct in order.lineproducts.all|slice:"0:3" %}
@@ -75,8 +79,6 @@
       {% endfor %}
     </section>
 
-
   </main>
-
 
 {% endblock %}
