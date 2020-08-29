@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     $('#sort-selector').change(function () {
         var selector = $(this);
@@ -19,4 +19,29 @@ $(document).ready(function() {
             window.location.replace(currentUrl);
         }
     });
+
+    // User to add 1 to 99 products at a time
+    $('#increment-qty').click(function () {
+        var productQty = $('#product-qty');
+        var currentValue = parseInt(productQty.val());
+        if (currentValue < 99) {
+            productQty.val(currentValue + 1);
+        } else {
+            $("#increment-qty").attr("title", "Add 99 max").tooltip('show');
+        }
+    });
+    $('#decrement-qty').click(function () {
+        var productQty = $('#product-qty');
+        var currentValue = parseInt(productQty.val());
+        if (currentValue > 1) {
+            productQty.val(currentValue - 1);
+        } else {
+            $("#decrement-qty").attr("title", "Add 1 minimum").tooltip('show');
+        }
+    });
+    $('#decrement-qty, #increment-qty').mouseleave(function () {
+        $('.product-form [data-toggle="tooltip"]').tooltip('dispose');
+    });
+
+
 })

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 import mail_config
+from private_keys import (
+    stripe_secret_key, stripe_public_key, stripe_wh_secret_key)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -50,6 +52,8 @@ INSTALLED_APPS = [
     'home',
     'store',
     'profile',
+    'cart',
+    'checkout',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +84,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'store.context.in_store'
+                'store.context.in_store',
+                'cart.context.cart_content',
             ],
         },
     },
@@ -182,4 +187,11 @@ else:
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_HOST_USER = mail_config.user
     EMAIL_HOST_PASSWORD = mail_config.password
-    DEFAULT_FROM_EMAIL = mail_config.user
+    DEFAULT_FROM_EMAIL = mail_config.mail_from
+
+# Stripe Payment
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', stripe_public_key)
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', stripe_secret_key)
+STRIPE_WEBHOOK_SECRET_KEY = os.environ.get('STRIPE_WEBHOOK_SECRET_KEY',
+                                           stripe_wh_secret_key)
+STRIPE_CURRENCY = 'eur'
