@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.core.exceptions import ValidationError
 
 
-def new_image_path(instance, filename):
+def _new_image_path(instance, filename):
     """
     Rename image file and upload to
     'media/products/<product_sku>/<new_file_name>.<file_extension>'
@@ -17,6 +17,24 @@ def new_image_path(instance, filename):
 
     file_name = f'image_01.{file_extension}'
     path = f'products/{instance.sku}'
+
+    return f'{path}/{file_name}'
+
+
+def _new_product_files_path(instance, filename):
+    """
+    Rename product image's file to
+    'media/products/<product_name>/<uuid4_random_number>.<file_extension>'
+
+    :param instance: the instance model name
+    :param filename: name of actual file uploaded
+    :return: String : <path>/<filename>.<extension>
+    """
+
+    file_extension = filename.rsplit('.', 1)[-1].lower()
+
+    file_name = f'{uuid4().hex}.{file_extension}'
+    path = f'products/{instance.product.sku}'
 
     return f'{path}/{file_name}'
 
@@ -53,7 +71,7 @@ class Product(models.Model):
     description = models.TextField(max_length=999)
     date_version = models.DateField(auto_now_add=True)
     base_price = models.DecimalField(max_digits=6, decimal_places=2)
-    image = models.ImageField(upload_to=new_image_path)
+    image = models.ImageField(upload_to=_new_image_path)
 
     def __str__(self):
         return self.name
@@ -68,3 +86,16 @@ class Product(models.Model):
                 {'base_price': 'Please set a minimum price of 0.1'})
         else:
             super().save(*args, **kwargs)
+
+
+class Product3DFile(models.Model):
+    """Model for Products 3D files"""
+
+    product = models.OneToOneField(Product, on_delete=models.SET_NULL,
+                                   related_name='printing_file',
+                                   null=True, blank=True)
+    file = models.FileField(upload_to=_new_product_files_path,
+                            null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.product.name} \'s printing file'
