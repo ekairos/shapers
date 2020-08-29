@@ -1,9 +1,40 @@
 /*
         ___ MAIN NAVBAR ___
 */
-nav#main-navbar {
+#main-navbar {
   z-index: 999;
   background-color: $bright-gray;
+}
+
+#signin-dropdown {
+  position: absolute;
+  left: unset;
+  right: 0;
+}
+
+/*
+        ___ SEARCH BAR ___
+*/
+.search-bar {
+  background-color: white;
+  position: fixed;
+  top: 49px;  // navbar height
+  z-index: 900;
+  width: 100%;
+
+  form {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 520px;
+  }
+
+  button {
+    background-color: #e2e2e2;
+
+    &:hover {
+      background-color: #eeeeee;
+    }
+  }
 }
 
 /*
@@ -18,4 +49,53 @@ nav#main-navbar {
 .copyright {
   text-align: center;
   font-size: .8rem;
+}
+
+/*
+        ___ MAIN FOOTER ___
+*/
+.side-nav {
+  position: fixed;
+  bottom: 0;
+  left: -250px;
+  top: 49px; // navbar height 49.01
+  width: 250px;
+  z-index: 995;
+  overflow-x: hidden;
+  background-color: #f5f5f5;
+  transition: all 0.3s ease-in-out;
+
+  ul {
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  li {
+    padding: 16px 10px 16px 20px;
+  }
+}
+
+.slide-menu-in {
+  transform: translateX(250px);
+}
+
+#sidenav-backdrop {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 990;
+  width: 100%;
+}
+
+.slide-in-btn,
+.slide-out-btn {
+  cursor: pointer;
+}
+
+.slide-out-btn {
+  font-size: 1.5rem;
+  padding-right: 1em;
+  text-align: right;
 }

@@ -6,9 +6,47 @@ html, body {
 
 .main-wrapper {
   min-height: calc(100% - 147px); // minus footer 146.8
-  padding-top: 49px; // navbar height 49.01
+  padding-top: 80px; // navbar height 80.5
 }
 
 .title {
   font-family: 'Oswald', sans-serif;
+}
+
+.divider {
+  border-bottom: 1px $mid-gray;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+
+/*
+        ___ MESSAGES & FEEDBACK ___
+*/
+.message-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 960;
+}
+
+@each $level, $color in $status-classes {
+  .toast-border-#{$level} {
+    border-left: solid 3px #{$color};
+  }
+  .text-#{$level} {
+    color: #{$color};
+  }
+}
+
+/*
+        ___ MODALS ___
+*/
+.modal-dialog {
+  top: calc(50% - 150px);
+}
+
+.modal .modal-content {
+  border-radius: 0;
+  border: none;
 }

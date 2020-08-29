@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import mail_config
+from private_keys import (
+    stripe_secret_key, stripe_public_key, stripe_wh_secret_key)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -40,8 +43,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     # project's apps
     'home',
+    'store',
+    'profile',
+    'cart',
+    'checkout',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +71,10 @@ ROOT_URLCONF = 'shapers.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates', 'allauth'),
+        ]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -69,10 +84,40 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'store.context.in_store',
+                'cart.context.cart_content',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
+
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_UNIQUE_EMAIL = True
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_FORMS = {
+    'signup': 'profile.forms.UserSignupForm',
+    'login': 'profile.forms.UserLoginForm',
+    'reset_password': 'profile.forms.UserPasswordResetForm',
+    'reset_password_from_key': 'profile.forms.UserPasswordResetFromKeyForm',
+    'change_password': 'profile.forms.UserPasswordChangeForm',
+}
 
 WSGI_APPLICATION = 'shapers.wsgi.application'
 
@@ -129,3 +174,24 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Email config
+if 'DEV' in os.environ:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'noreply@shapers.com'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = mail_config.user
+    EMAIL_HOST_PASSWORD = mail_config.password
+    DEFAULT_FROM_EMAIL = mail_config.mail_from
+
+# Stripe Payment
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', stripe_public_key)
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', stripe_secret_key)
+STRIPE_WEBHOOK_SECRET_KEY = os.environ.get('STRIPE_WEBHOOK_SECRET_KEY',
+                                           stripe_wh_secret_key)
+STRIPE_CURRENCY = 'eur'

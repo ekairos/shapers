@@ -1,0 +1,77 @@
+<div class="search-bar">
+  <form id="search-bar" method="GET" action="{% url 'store' %}">
+    <div class="input-group">
+      <a id="categories-selector"
+         class="btn btn-small btn-light dropdown-toggle input-group-text border-0 rounded-0"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        from categories...
+      </a>
+      <ul id="categories-selection" class="dropdown-menu rounded-0" aria-labelledby="categories-selector">
+        {% for cat in categories %}
+          <li class="dropdown-item {% if cat.name in query_categories %}active-selection{% endif %}"
+              id="{{ cat.id }}">{{ cat.name|title }}</li>
+        {% endfor %}
+      </ul>
+      <input type="text" class="form-control border-0 rounded-0" placeholder="search for ..." name="q"
+             {% if query_string %}value="{{ query_string }}"{% endif %}>
+      <input type="hidden" value="{{ query_categories }}">
+      <div class="input-group-append">
+        <button type="submit" class="form-control btn border-0 rounded-0">
+          <img class="icon" src="{{ MEDIA_URL }}icons/search.svg" alt="search" width="18" title="Search">
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  $(document).ready(function () {
+    // prevent default form submission to process categories selection
+    var form = document.getElementById('search-bar');
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+
+      var currentUrl = new URL(window.location);
+      currentUrl.pathname = '/store/';
+
+      const searchParams = new URLSearchParams(window.location.search);
+
+      var category = [];
+      var q = searchParams.get('q');
+
+      // Modify selected categories in dropdown list
+      var selectedCategories = $('#categories-selection .active-selection');
+      selectedCategories.each(function (el) {
+        category.push(this.textContent);
+      });
+
+      var stringQuery = $('#search-bar input[name="q"]').val();
+
+      if (category.length === 0) {
+        currentUrl.searchParams.delete('category');
+      } else {
+        currentUrl.searchParams.set('category', category);
+      }
+
+      if ((q === '') || (q === null)) {
+          currentUrl.searchParams.delete('q');
+      } else {
+        currentUrl.searchParams.set('q', q);
+      }
+      if ((stringQuery !== '') && (stringQuery != null)) {
+        currentUrl.searchParams.set('q', stringQuery);
+      } else {
+        currentUrl.searchParams.delete('q');
+      }
+
+      window.location.replace(currentUrl);
+
+    });
+
+    $('#categories-selection .dropdown-item').click(function () {
+      $(this).toggleClass('active-selection');
+    });
+
+  });
+</script>

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %} - Store{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'store/css/store.css' %}">
+{% endblock %}
+
+{% block content %}
+  <header class="container mt-3">
+
+    {% include 'store/includes/sort_bar.html' %}
+
+    {% if products %}
+      <p>{{ products|length }} Product{% if products|length > 1 %}s{% endif %} found
+
+        {% if query_string %} for ' <i>{{ query_string }}</i> '{% endif %}
+
+        {% if query_categories %} in
+          {% for cat in query_categories %}
+            {% if forloop.revcounter0 > 1 %}
+              <span><strong>{{ cat|capfirst }}</strong>, </span>
+            {% elif forloop.revcounter0 == 1 %}
+              <span><strong>{{ cat|capfirst }}</strong> and </span>
+            {% elif forloop.revcounter0 == 0 %}
+              <span><strong>{{ cat|capfirst }}</strong></span>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+      </p>
+    {% endif %}
+
+  </header>
+  <main class="container mb-3">
+    <div class="row">
+      {% for product in products %}
+        <article class="col-12 col-md-4 d-md-flex">
+          <div class="row">
+            <section class="col-6 col-md-12">
+              <a href="{% url 'product_details' product.id %}">
+                <img class="store-card-img" src="{{ product.image.url }}" alt="{{ product.name }}" width="140">
+              </a>
+            </section>
+            <section class="col-6 col-md-12 pt-md-1 pb-md-2 d-flex flex-column">
+              <h5><a href="{% url 'product_details' product.id %}">{{ product.name|capfirst }}</a></h5>
+              <p>{{ product.description|truncatechars:60 }}</p>
+              <span class="align-self-end align-self-md-start mt-auto pr-3 pb-2">${{ product.base_price }}</span>
+            </section>
+          </div>
+        </article>
+        {% if forloop.revcounter0 > 0 %}
+          <hr class="divider my-3 d-block d-md-none">
+        {% endif %}
+      {% empty %}
+        {% if query_string %}
+          <p class="col-12">Couldn't find any product with ' <i>{{ query_string }}</i> '.</p>
+        {% else %}
+          <p class="col-12">Couldn't find any corresponding product.</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </main>
+{% endblock %}
+
+{% block postload_js %}
+  {{ block.super }}
+  <script type="application/javascript" src="{% static 'store/js/store.js' %}"></script>
+{% endblock %}
+

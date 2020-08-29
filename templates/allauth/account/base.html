@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'profile/css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <header class="container my-3 offset-md-2">
+    {% block inner_header %}
+    {% endblock %}
+  </header>
+
+  <main class="container mb-3 offset-md-2">
+    {% block inner_content %}
+    {% endblock %}
+  </main>
+
+{% endblock %}

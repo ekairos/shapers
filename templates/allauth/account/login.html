@@ -1,0 +1,83 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block inner_header %}
+
+  <h1 class="title">{% trans "Sign In" %}</h1>
+
+  {% get_providers as socialaccount_providers %}
+
+  {% if socialaccount_providers %}
+    <p>{% blocktrans with site.name as site_name %}Please sign in with one
+      of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+      for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+
+    <div class="socialaccount_ballot">
+
+      <ul class="socialaccount_providers">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+      </ul>
+
+      <div class="login-or">{% trans 'or' %}</div>
+
+    </div>
+
+    {% include "socialaccount/snippets/login_extra.html" %}
+
+  {% else %}
+    <p>{% blocktrans %}If you have not created an account yet, then please
+      <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+  {% endif %}
+{% endblock %}
+
+{% block inner_content %}
+
+  <form class="login" method="POST" action="{% url 'account_login' %}">
+    {% csrf_token %}
+
+    <div class="errorlist">
+      {% for err, message in form.errors.items %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+
+    {% for field in form %}
+      {% if field.auto_id == 'id_remember' %}
+        <div class="form-check py-2">
+          {{ field }}
+          <label class="form-check-label ml-3" for="{{ field.auto_id }}">{{ field.label }}</label>
+        </div>
+      {% else %}
+        <div class="input-group pt-2">
+          {{ field }}
+        </div>
+        <p class="form-field-error">{{ fields.field.errors }}</p>
+      {% endif %}
+    {% endfor %}
+
+    <div class="mt-2">
+      <small>By signing in you agree to our <a href="{% url 'terms_use' %}">Terms of Use</a> and our
+        <a href="{% url 'privacy_policy' %}">Privacy Policy</a>.</small>
+    </div>
+
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <div class="my-3">
+      {% if redirect_field_value %}
+      <a class="btn btn-dark rounded-0" href="{{ redirect_field_value }}">{% trans 'Cancel' %}</a>
+      {% else %}
+      <a class="btn btn-dark rounded-0" href="{% url 'store' %}">{% trans 'Cancel' %}</a>
+      {% endif %}
+      <button class="primaryAction btn-dark btn rounded-0" type="submit">{% trans "Sign In" %}</button>
+    </div>
+  </form>
+  <small class="my-3">
+    <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  </small>
+
+{% endblock %}
