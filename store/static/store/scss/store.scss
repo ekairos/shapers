@@ -16,20 +16,60 @@
 
 //      ___ Product Details ___
 .product-img {
-  max-height: 350px;
+  min-height: 350px;
+  height: 50vh;
   object-fit: contain;
   width: 100%;
+}
+
+.product-tbn {
+  height: 80px;
+  object-fit: cover;
+  padding: 0.25rem;
+}
+
+.tbn-list {
+  padding-top: 0.5rem;
+
+  .product-tbn:nth-child(4n+1) {
+    padding-left: 0;
+  }
+  .product-tbn:nth-child(4n) {
+    padding-right: 0;
+  }
 }
 
 /*
         ---___ MEDIA RULES ___---
 */
+@media (min-width: 768px) {
+  .product-tbn {
+    height: 100px;
+  }
+}
+
+@media (min-width: 992px) {
+  .tbn-list {
+    .product-tbn:nth-child(4n+1) {
+      padding-left: 0.25rem;
+    }
+    .product-tbn:nth-child(4n) {
+      padding-right: 0.25rem;
+    }
+    .product-tbn:nth-child(6n+1) {
+      padding-left: 0;
+    }
+    .product-tbn:nth-child(6n) {
+      padding-right: 0;
+    }
+  }
+}
+
 @media (min-width: 1200px) {
   .store-card-img {
     height: 220px;
   }
-
-  .product-img {
-    max-height: 450px;
+  .product-tbn {
+    height: 120px;
   }
 }
