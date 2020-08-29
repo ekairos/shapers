@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Category, Product, Product3DFile
+from .models import Category, Product, Product3DFile, ProductImage
+
+
+class ProductImageAdminInline(admin.TabularInline):
+    model = ProductImage
+    extra = 3
 
 
 class Product3DFileAdminInline(admin.TabularInline):
@@ -9,7 +14,8 @@ class Product3DFileAdminInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('sku',)
-    inlines = (Product3DFileAdminInline,)
+    inlines = (Product3DFileAdminInline,
+               ProductImageAdminInline,)
 
 
 admin.site.register(Category)

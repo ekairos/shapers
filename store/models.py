@@ -24,7 +24,7 @@ def _new_image_path(instance, filename):
 def _new_product_files_path(instance, filename):
     """
     Rename product image's file to
-    'media/products/<product_name>/<uuid4_random_number>.<file_extension>'
+    'media/products/<product_sku>/<new_file_name>.<file_extension>'
 
     :param instance: the instance model name
     :param filename: name of actual file uploaded
@@ -86,6 +86,31 @@ class Product(models.Model):
                 {'base_price': 'Please set a minimum price of 0.1'})
         else:
             super().save(*args, **kwargs)
+
+
+class ProductImage(models.Model):
+    """Model for extra products images"""
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                related_name='images')
+    image_name = models.CharField(max_length=32, blank=True, null=True)
+    image = models.ImageField(upload_to=_new_product_files_path)
+
+    def save(self, *args, **kwargs):
+        """
+        Override save method to give image file a default name based on
+        products image count if no name given.
+        Starts at 02 to avoid confusion with product's mandatory image_01 file.
+        """
+
+        if self.image_name is None:
+            self.image_name = f'image_0{self.product.images.count() + 2}'
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.image_name} of {self.product.name} ' \
+               f'#{self.product.sku}'
 
 
 class Product3DFile(models.Model):
