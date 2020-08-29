@@ -2,6 +2,27 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .forms import ContactForm
 from profile.models import UserProfile
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+
+
+def _send_confirmation_email(content):
+    """Send the user a confirmation email"""
+
+    email_subject = render_to_string(
+        'home/emails/contact_confirmation_email_subject.txt',
+        {'inquiry': content})
+    email_body = render_to_string(
+        'home/emails/contact_confirmation_email_body.txt',
+        {'inquiry': content, 'contact_us_email': settings.DEFAULT_FROM_EMAIL})
+
+    send_mail(
+        subject=email_subject,
+        message=email_body,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[content.email]
+    )
 
 
 def home(request):
@@ -40,12 +61,18 @@ def contact_us(request):
                     contact_form = contact_form.save(commit=False)
                     user_profile = UserProfile.objects.get(user=request.user)
                     contact_form.user_profile = user_profile
-                contact_form.save()
-                # insert send email code here !
+                    contact_form.save()
+                    inquiry = UserProfile.objects.get(user=request.user)\
+                        .inquiries.last()
+                else:
+                    inquiry = contact_form.save()
+
+                _send_confirmation_email(inquiry)
 
                 messages.success(request,
-                                 "We have received your message. "
-                                 "An email confirmation has been sent.")
+                                 f'We have received your message. '
+                                 f'An email confirmation has been sent to '
+                                 f'{inquiry.email}.')
                 return redirect(redirect_to)
 
             except Exception as e:
