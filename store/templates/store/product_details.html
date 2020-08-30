@@ -68,7 +68,7 @@
           <div class="row mx-auto tbn-list">
             {% if product.printing_file %}
               <img class="col-3 col-lg-2 product-tbn" src="{{ product.image.url }}" alt="{{ product.image.name }}"
-                 height="80px" width="80px">
+                   height="80px" width="80px">
               <div class="d-flex justify-content-center col-3 col-lg-2 product-tbn product-tbn-3d">
                 <i class="fas fa-cubes fa-3x align-self-center"></i>
               </div>
@@ -91,6 +91,17 @@
       </section>
 
     </article>
+  </div>
+
+  <!-- Product Image Viewer -->
+  <div id="product-viewer" class="viewer-window">
+    <div id="viewer-content" class="viewer-content">
+      <div class="viewer-btns">
+        <span class="m-4" onclick="toggleFullScreen()"><i class="fa fa-expand"></i></span>
+        <a id="viewer-close"><i class="fas fa-times"></i></a>
+      </div>
+      <img id="viewer-image" class="viewer-image" src="{{ product.image.url }}" alt="image missing" onclick="toggleFullScreen()">
+    </div>
   </div>
 {% endblock %}
 

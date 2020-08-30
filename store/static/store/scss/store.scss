@@ -34,8 +34,62 @@
   .product-tbn:nth-child(4n+1) {
     padding-left: 0;
   }
+
   .product-tbn:nth-child(4n) {
     padding-right: 0;
+  }
+}
+
+.viewer-window {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 500;
+  padding-top: 80px;
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.viewer-content {
+  display: block;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  animation: viewerZoomIn 0.2s ease-out;
+}
+
+.viewer-image {
+  width: 100%;
+  object-fit: contain;
+}
+
+.viewer-btns {
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  line-height: 1rem;
+  color: white;
+  text-shadow: 0 0 5px black;
+
+  a {
+    color: white;
+  }
+}
+
+/*      Popup image viewer animation
+*/
+@keyframes viewerZoomIn {
+  from {
+    transform: scale(0.4);
+    opacity: 0
+  }
+  to {
+    transform: scale(1);
+    opacity: 1
   }
 }
 
@@ -53,12 +107,15 @@
     .product-tbn:nth-child(4n+1) {
       padding-left: 0.25rem;
     }
+
     .product-tbn:nth-child(4n) {
       padding-right: 0.25rem;
     }
+
     .product-tbn:nth-child(6n+1) {
       padding-left: 0;
     }
+
     .product-tbn:nth-child(6n) {
       padding-right: 0;
     }
