@@ -17,11 +17,13 @@ Table Of Contents
     - [Story Map](#story-map)
 - [Tech used](#tech-used)
 - [Contributing](#contributing)
+    - [Running the project](#running-the-project-locally)
+    - [Deployment](#deployment)
     - [Testing](#testing)
         - [Unit tests](#unit-tests)
         - [End-To-End](#end-to-end-tests)
         - [Stripe Webhooks](#stripe-webhooks)
-
+- [Credits](#credits)
 
 # Overview
 
@@ -218,6 +220,9 @@ You will need to create an account for each of the following:
     npm run sass
     ```
 
+
+[To top](#django-fullstack-project)
+
 ## Deployment
 
 [Shapers](https://test-shapers.herokuapp.com/) is deployed on [Heroku](https://www.heroku.com/).
@@ -384,7 +389,10 @@ A quick workaround was to duplicate and comment out the order creation block:
    
 [To top](#django-fullstack-project)
 
-## Code
+
+## Credits
+
+### Code
 
 - [<model-viewer>](https://modelviewer.dev/)  
     The 3d printing files interaction in products gallery relies on Google's model-viewer.
@@ -392,12 +400,13 @@ A quick workaround was to duplicate and comment out the order creation block:
 - [Bootstrap](https://getbootstrap.com/docs/4.4/getting-started/introduction/)  
     Using extensively the Grid System and overriding or fine tuning them when necessary.  
 
-## Credits
-
 ### Media
 
 - [Poly](https://poly.google.com/)  
     Since I did not have the time to add my own 3D models I used Google's Poly materials under BY CC license.
+- [Vinson Tan](https://pixabay.com/fr/users/vinsky2002-1151065/) on Pixabay for sharing the figurines pics. 
+- 3D rendered models from myself using Maya (Autodesk).
+
 
 ### Content
 
@@ -407,3 +416,6 @@ A quick workaround was to duplicate and comment out the order creation block:
 
 - My mentor [Aaron Sinnott](https://github.com/aaronsnig501), for his encouraging support, helping me manage this project 
 and his precious insights.
+
+
+[To top](#django-fullstack-project)
