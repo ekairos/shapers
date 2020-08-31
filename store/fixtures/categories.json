@@ -1,0 +1,66 @@
+[
+  {
+    "model": "store.category",
+    "pk": 7,
+    "fields": {
+      "name": "Marvel",
+      "description": null
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 8,
+    "fields": {
+      "name": "Home",
+      "description": null
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 9,
+    "fields": {
+      "name": "Garden",
+      "description": null
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 10,
+    "fields": {
+      "name": "games",
+      "description": null
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 11,
+    "fields": {
+      "name": "Animation",
+      "description": null
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 12,
+    "fields": {
+      "name": "Toys",
+      "description": "All sort of things to play with"
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 13,
+    "fields": {
+      "name": "Miniatures",
+      "description": "All sorts of \"things\" reduced in size"
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 15,
+    "fields": {
+      "name": "Poly",
+      "description": "Anything in Low poly or cubism"
+    }
+  }
+]
