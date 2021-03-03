@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, Category
 from django.db.models import Q
 from django.core.paginator import Paginator
 
@@ -12,27 +12,38 @@ def store(request):
     query_string = None
     query_categories = None
     query_sorting = None
+    query_cat_url = ''
 
     # Keep products per page %3 aligned with BS grid
-    per_page = 9
+    per_page = 6
     p = Paginator(products, per_page=per_page)
 
     if request.GET:
 
         if 'category' in request.GET:
-            query_categories = request.GET['category'].split(',')
-            products = products.filter(category__name__in=query_categories)
-            request.session['search_category'] = query_categories
+            categories_id = request.GET['category'].split(',')
+            request.session['search_category'] = categories_id
+
+            x = lambda a: Category.objects.get(id=a)
+            query_categories = {
+                x(cat_id).name: x(cat_id).id
+                for cat_id in categories_id
+            }
+            products = products.filter(category__id__in=categories_id)
 
         elif 'search_category' in request.session:
             products = products.filter(
-                category__name__in=request.session['search_category'])
+                category__id__in=request.session['search_category'])
 
         if 'q' in request.GET:
             query_string = request.GET['q']
+            request.session['search_key'] = query_string
             queries = Q(name__icontains=query_string) | Q(
                 description__icontains=query_string)
             products = products.filter(queries)
+        # elif 'search_key' in request.session:
+        #     queries = request.session['search_key']
+        #     products = products.filter(queries)
 
         if 'sort' in request.GET:
             sort = request.GET['sort']
@@ -63,10 +74,15 @@ def store(request):
     else:
         page = p.get_page(1)
 
+    if 'search_category' in request.session \
+            and request.session['search_category']:
+        query_cat_url = '%2C'.join(request.session['search_category'])
+
     context = {
         'products': products,
         'query_string': query_string,
         'query_categories': query_categories,
+        'query_cat_url': query_cat_url,
         'query_sorting': query_sorting,
         'page': page,
     }

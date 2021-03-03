@@ -9,7 +9,7 @@
       <ul id="categories-selection" class="dropdown-menu rounded-0" aria-labelledby="categories-selector">
         {% for cat in categories %}
           <li class="dropdown-item {% if cat.name in query_categories %}active-selection{% endif %}"
-              id="{{ cat.id }}">{{ cat.name|title }}</li>
+              id="cat-{{ cat.id }}">{{ cat.name|title }}</li>
         {% endfor %}
       </ul>
       <input type="text" class="form-control border-0 rounded-0" placeholder="search for ..." name="q"
@@ -26,32 +26,44 @@
 
 <script>
   $(document).ready(function () {
+
+    let currentUrl = new URL(window.location);
+    currentUrl.pathname = '/store/';
+
+    const searchParams = new URLSearchParams(window.location.search);
+    let q = searchParams.getAll('q');
+    let c = searchParams.getAll('category');
+
+    let categoriesParams = [];
+    if (c.length !== 0) {
+      categoriesParams = c[0].split(',')
+    }
+
+    categoriesParams.forEach(function (el) {
+      $(`#cat-${el}`).addClass('active-selection');
+    });
+
     // prevent default form submission to process categories selection
     var form = document.getElementById('search-bar');
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
 
-      var currentUrl = new URL(window.location);
-      currentUrl.pathname = '/store/';
 
-      const searchParams = new URLSearchParams(window.location.search);
-
-      var category = [];
-      var q = searchParams.get('q');
+      let categories = [];
 
       // Modify selected categories in dropdown list
-      var selectedCategories = $('#categories-selection .active-selection');
-      selectedCategories.each(function (el) {
-        category.push(this.textContent);
+      let selectedCategories = $('#categories-selection .active-selection');
+      selectedCategories.each(function () {
+        categories.push(this.getAttribute('id').replace('cat-', ''));
       });
 
       var stringQuery = $('#search-bar input[name="q"]').val();
 
-      if (category.length === 0) {
+      if (categories.length === 0) {
         currentUrl.searchParams.delete('category');
       } else {
-        currentUrl.searchParams.set('category', category);
+        currentUrl.searchParams.set('category', categories);
       }
 
       if ((q === '') || (q === null)) {

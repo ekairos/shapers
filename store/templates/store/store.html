@@ -15,7 +15,7 @@
     {% if products %}
       <p>{{ products|length }} Product{% if products|length > 1 %}s{% endif %} found
 
-        {% if query_string %} for ' <i>{{ query_string }}</i> '{% endif %}
+        {% if query_string %} for '<i>{{ query_string }}</i> '{% endif %}
 
         {% if query_categories %} in
           {% for cat in query_categories %}
