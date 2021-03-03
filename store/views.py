@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, Category
 from django.db.models import Q
 from django.core.paginator import Paginator
 
@@ -12,6 +12,7 @@ def store(request):
     query_string = None
     query_categories = None
     query_sorting = None
+    query_cat_url = ''
 
     # Keep products per page %3 aligned with BS grid
     per_page = 6
@@ -20,15 +21,17 @@ def store(request):
     if request.GET:
 
         if 'category' in request.GET:
-            print('category in request.GET')
             categories_id = request.GET['category'].split(',')
             request.session['search_category'] = categories_id
-            query_categories = categories_id
+
+            x = lambda a: Category.objects.get(id=a)
+            query_categories = {
+                x(cat_id).name: x(cat_id).id
+                for cat_id in categories_id
+            }
             products = products.filter(category__id__in=categories_id)
 
         elif 'search_category' in request.session:
-            print('elif category in request.session')
-            print(request.session['search_category'])
             products = products.filter(
                 category__id__in=request.session['search_category'])
 
@@ -71,9 +74,9 @@ def store(request):
     else:
         page = p.get_page(1)
 
-    if 'search_category' in request.session and request.session['search_category']:
+    if 'search_category' in request.session \
+            and request.session['search_category']:
         query_cat_url = '%2C'.join(request.session['search_category'])
-        print('query cat to pass', query_cat_url)
 
     context = {
         'products': products,
