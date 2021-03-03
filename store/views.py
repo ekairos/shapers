@@ -20,13 +20,13 @@ def store(request):
     if request.GET:
 
         if 'category' in request.GET:
-            query_categories = request.GET['category'].split(',')
-            products = products.filter(category__name__in=query_categories)
-            request.session['search_category'] = query_categories
+            categories_id = request.GET['category'].split(',')
+            products = products.filter(category__id__in=categories_id)
+            request.session['search_category'] = categories_id
 
         elif 'search_category' in request.session:
             products = products.filter(
-                category__name__in=request.session['search_category'])
+                category__id__in=request.session['search_category'])
 
         if 'q' in request.GET:
             query_string = request.GET['q']
