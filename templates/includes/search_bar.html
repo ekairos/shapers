@@ -37,7 +37,6 @@
     let categoriesParams = [];
     if (c.length !== 0) {
       categoriesParams = c[0].split(',')
-      console.log('categoriesParams', categoriesParams);
     }
 
     categoriesParams.forEach(function (el) {
@@ -55,7 +54,6 @@
 
       // Modify selected categories in dropdown list
       let selectedCategories = $('#categories-selection .active-selection');
-      console.log('selected', selectedCategories);
       selectedCategories.each(function () {
         categories.push(this.getAttribute('id').replace('cat-', ''));
       });
